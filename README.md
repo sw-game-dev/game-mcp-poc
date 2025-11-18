@@ -43,6 +43,7 @@ Builds optimized backend binary and frontend WASM assets.
 ./scripts/serve.sh
 ```
 Runs production server (serves both API and static frontend).
+<<<<<<< HEAD
 
 ### Run Tests
 
@@ -431,3 +432,89 @@ MIT
 ---
 
 **Built with Rust 2024** | **Test-Driven Development** | **100% Coverage**
+=======
+
+## Testing
+
+```bash
+# Run all tests
+cargo test --all
+
+# Test specific package
+cargo test --package backend
+cargo test --package frontend
+cargo test --package shared
+
+# WASM tests (requires wasm-pack)
+cd frontend
+wasm-pack test --headless --firefox
+```
+
+## MCP Tools for AI Agents
+
+The backend provides these MCP tools for AI agents to interact with the game:
+
+- `view_game_state` - Get current board state
+- `get_turn` - Determine whose turn it is
+- `make_move` - Submit a move (row, col)
+- `taunt_player` - Send a message to the human player
+- `restart_game` - Start a new game
+- `get_game_history` - View all past moves
+
+## Architecture
+
+```
+┌─────────────┐                    ┌──────────────┐
+│   Browser   │◄──── REST API ────►│              │
+│  (Yew/WASM) │                    │   Backend    │◄──── SQLite
+└─────────────┘                    │ (Axum/Rust)  │
+                                   │              │
+┌─────────────┐                    │              │
+│  AI Agent   │◄──── MCP Tools ───►│              │
+└─────────────┘                    └──────────────┘
+```
+
+### Workspace Structure
+
+- **backend/** - Rust REST API, MCP server, and static file serving
+- **frontend/** - Yew/WASM web interface
+- **shared/** - Common types used by both frontend and backend
+- **docs/** - Architecture, design, and process documentation
+
+## Prerequisites
+
+- Rust 2024 edition
+- `trunk` (auto-installed by build scripts)
+- `wasm-bindgen-cli` (auto-installed by build scripts)
+- `wasm32-unknown-unknown` target (auto-added by scripts)
+
+## Development Process
+
+This project follows strict Test-Driven Development (TDD):
+
+1. **Red**: Write a failing test first
+2. **Green**: Write minimal code to pass the test
+3. **Refactor**: Improve code while keeping tests green
+
+### Pre-commit Checklist
+
+- [ ] `cargo fmt --all`
+- [ ] `cargo clippy --all-targets --all-features -- -D warnings`
+- [ ] `cargo test --all`
+- [ ] Update documentation if needed
+
+See [docs/process.md](./docs/process.md) for full development guidelines.
+
+## Documentation
+
+- [Architecture](./docs/architecture.md) - System design and tech stack
+- [PRD](./docs/prd.md) - Product requirements
+- [Design](./docs/design.md) - Detailed specifications
+- [Plan](./docs/plan.md) - Implementation plan
+- [Process](./docs/process.md) - TDD and development workflow
+- [Status](./docs/status.md) - Current project status
+
+## License
+
+MIT
+>>>>>>> 7b7e486 (docs: Reorganize documentation and create user-friendly README)
