@@ -1,0 +1,24 @@
+[package]
+name = "frontend"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+shared = { path = "../shared" }
+yew.workspace = true
+wasm-bindgen.workspace = true
+web-sys.workspace = true
+gloo.workspace = true
+gloo-net.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+console_log.workspace = true
+log.workspace = true
+
+[dev-dependencies]
+wasm-bindgen-test.workspace = true
