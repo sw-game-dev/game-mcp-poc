@@ -27,8 +27,9 @@ impl GameManager {
     /// Get the current game, or create a new one if none exists
     pub fn get_or_create_game(&mut self) -> Result<GameState, GameError> {
         // If we have a current game ID, try to load it
-        if let Some(game_id) = &self.current_game_id &&
-           let Ok(game) = self.repository.load_game(game_id) {
+        if let Some(game_id) = &self.current_game_id
+            && let Ok(game) = self.repository.load_game(game_id)
+        {
             return Ok(game);
         }
 
