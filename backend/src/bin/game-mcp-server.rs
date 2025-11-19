@@ -1,11 +1,10 @@
 use backend::mcp::server::McpServer;
 use std::env;
-use tracing_subscriber::{fmt, EnvFilter};
+use tracing_subscriber::{EnvFilter, fmt};
 
 fn main() {
     // Initialize tracing
-    let filter = EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| EnvFilter::new("info"));
+    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
 
     fmt()
         .with_env_filter(filter)
@@ -15,8 +14,7 @@ fn main() {
     tracing::info!("Starting Game MCP Server");
 
     // Get database path from environment or use default
-    let db_path = env::var("GAME_DB_PATH")
-        .unwrap_or_else(|_| "game.db".to_string());
+    let db_path = env::var("GAME_DB_PATH").unwrap_or_else(|_| "game.db".to_string());
 
     tracing::info!("Using database path: {}", db_path);
 

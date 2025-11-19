@@ -1,4 +1,4 @@
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::io::{BufRead, BufReader, Write};
 use std::process::{Child, Command, Stdio};
 use uuid::Uuid;
@@ -135,10 +135,12 @@ fn test_mcp_make_move_invalid_position() {
     assert_eq!(response["jsonrpc"], "2.0");
     assert!(response["error"].is_object());
     assert_eq!(response["error"]["code"], -32602); // INVALID_PARAMS
-    assert!(response["error"]["message"]
-        .as_str()
-        .unwrap()
-        .contains("out of bounds"));
+    assert!(
+        response["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("out of bounds")
+    );
 }
 
 #[test]
@@ -154,10 +156,12 @@ fn test_mcp_make_move_occupied_cell() {
     assert_eq!(response["jsonrpc"], "2.0");
     assert!(response["error"].is_object());
     assert_eq!(response["error"]["code"], -32602); // INVALID_PARAMS
-    assert!(response["error"]["message"]
-        .as_str()
-        .unwrap()
-        .contains("occupied"));
+    assert!(
+        response["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("occupied")
+    );
 }
 
 #[test]
@@ -238,10 +242,12 @@ fn test_mcp_complete_game_playthrough() {
     // Try to make another move (should fail)
     let move6 = client.make_move(2, 0);
     assert!(move6["error"].is_object());
-    assert!(move6["error"]["message"]
-        .as_str()
-        .unwrap()
-        .contains("already over"));
+    assert!(
+        move6["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("already over")
+    );
 
     // Check history
     let history = client.get_game_history();

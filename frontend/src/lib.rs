@@ -48,7 +48,7 @@ pub fn main() {
 
 #[cfg(test)]
 mod tests {
-    use shared::{Player, Cell};
+    use shared::{Cell, Player};
 
     #[test]
     fn test_player_types_used_in_component() {
