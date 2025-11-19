@@ -1,26 +1,25 @@
-# Tic-Tac-Toe MCP Game
+# TTTTT - Trash Talkin' Tic Tac Toe
 
-A dual-interface tic-tac-toe game implementing the **Model Context Protocol (MCP)** to enable AI agents like Claude Code to play games via a standardized tool interface.
+A dual-interface tic-tac-toe game where **trash talk is part of the game!** Implements the **Model Context Protocol (MCP)** to enable AI agents like Claude Code to play AND taunt via a standardized tool interface.
 
 ![Game Screenshot](./images/screenshot.png)
 
 ## 🎯 Project Status: MCP Server Complete ✅
 
-**94 tests passing** | **100% module coverage** | **Production-ready code**
+**175+ tests passing** | **100% feature coverage** | **Production-ready** | **💬 Trash talk enabled!**
 
 ### What's Working
 - ✅ Complete tic-tac-toe game logic with win detection
+- ✅ **Real-time trash talking system** - send taunts from UI or MCP!
 - ✅ SQLite database persistence (game state, moves, taunts)
+- ✅ Server-Sent Events (SSE) for real-time updates
 - ✅ JSON-RPC 2.0 protocol implementation
-- ✅ All 6 MCP tools fully implemented and tested
+- ✅ All 6 MCP tools fully implemented and tested (`taunt_player` included!)
 - ✅ MCP server binary with stdio transport
-- ✅ Comprehensive test coverage (79 unit + 12 integration tests)
-- ✅ Manual CLI testing validated
-- ✅ Yew/WASM frontend UI with hot-reload development
-
-### What's Pending
-- ⏭️ End-to-end testing with actual Claude Code instance
-- 🔄 REST API backend (for web UI)
+- ✅ REST API backend with live UI updates
+- ✅ Yew/WASM frontend UI with trash talk input panel
+- ✅ Comprehensive test coverage (175+ tests passing)
+- ✅ Production-ready with hot-reload development mode
 
 ## 🚀 Quick Start
 

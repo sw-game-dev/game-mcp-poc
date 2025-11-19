@@ -4,11 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Tic-Tac-Toe game with dual interfaces:
-- **Web UI**: Yew/WASM frontend for human players
-- **MCP Server**: Model Context Protocol interface for AI agents to play
+**TTTTT - Trash Talkin' Tic Tac Toe** - A game where trash talk is part of the strategy!
 
-The game assigns X/O randomly, persists state to SQLite, and allows both humans (via browser) and AI agents (via MCP) to interact with the same game state.
+Dual interfaces with real-time trash talking:
+- **Web UI**: Yew/WASM frontend for human players with trash talk input panel
+- **MCP Server**: Model Context Protocol interface for AI agents to play AND taunt
+
+The game assigns X/O randomly, persists state to SQLite (including all taunts!), and allows both humans (via browser) and AI agents (via MCP) to interact with the same game state. Server-Sent Events (SSE) provide real-time updates for moves and trash talk.
 
 ## Essential Commands
 

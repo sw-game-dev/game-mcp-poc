@@ -8,7 +8,7 @@ use shared::{Cell, GameState, GameStatus, MoveSource, Player};
 use yew::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
-use web_sys::EventSource;
+use web_sys::{EventSource, HtmlInputElement};
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
@@ -23,6 +23,7 @@ fn app() -> Html {
     let game_state = use_state(|| None::<GameState>);
     let loading = use_state(|| true);
     let error_msg = use_state(|| None::<String>);
+    let taunt_input = use_state(String::new);
     let event_log = use_state(|| {
         vec![
             "Welcome to Tic-Tac-Toe!".to_string(),
@@ -186,6 +187,59 @@ fn app() -> Html {
             || ()
         });
     }
+
+    // Handle taunt input change
+    #[cfg(target_arch = "wasm32")]
+    let on_taunt_input = {
+        let taunt_input = taunt_input.clone();
+        Callback::from(move |e: web_sys::InputEvent| {
+            if let Some(target) = e.target() {
+                if let Ok(input) = target.dyn_into::<HtmlInputElement>() {
+                    taunt_input.set(input.value());
+                }
+            }
+        })
+    };
+
+    #[cfg(not(target_arch = "wasm32"))]
+    let on_taunt_input = Callback::from(move |_: web_sys::InputEvent| {});
+
+    // Handle taunt submission
+    let on_send_taunt = {
+        #[cfg(target_arch = "wasm32")]
+        let taunt_input = taunt_input.clone();
+        #[cfg(target_arch = "wasm32")]
+        let log_event = log_event.clone();
+
+        Callback::from(move |_| {
+            #[cfg(target_arch = "wasm32")]
+            {
+                let message = (*taunt_input).clone();
+                if message.trim().is_empty() {
+                    return;
+                }
+
+                let taunt_input = taunt_input.clone();
+                let log_event = log_event.clone();
+
+                log_event.emit(format!("💬 Sending taunt: {}", message));
+
+                wasm_bindgen_futures::spawn_local(async move {
+                    match api::send_taunt(message).await {
+                        Ok(_) => {
+                            info!("Taunt sent successfully");
+                            taunt_input.set(String::new());
+                            // State will be updated via SSE
+                        }
+                        Err(e) => {
+                            error!("Failed to send taunt: {}", e);
+                            log_event.emit(format!("❌ Failed to send taunt: {}", e));
+                        }
+                    }
+                });
+            }
+        })
+    };
 
     let on_new_game = {
         #[cfg(target_arch = "wasm32")]
@@ -376,7 +430,7 @@ fn app() -> Html {
 
     html! {
         <div class="app-container">
-            <h1>{"Tic-Tac-Toe MCP Game"}</h1>
+            <h1>{"TTTTT - Trash Talkin' Tic Tac Toe"}</h1>
             <div class="game-info">
                 {game_info}
             </div>
@@ -410,6 +464,22 @@ fn app() -> Html {
                             html! { <div class="taunt-empty">{"Waiting for game..."}</div> }
                         }
                     }
+                </div>
+                <div class="taunt-input-container">
+                    <input
+                        type="text"
+                        class="taunt-input"
+                        placeholder="Type your taunt here..."
+                        value={(*taunt_input).clone()}
+                        oninput={on_taunt_input}
+                    />
+                    <button
+                        class="btn-taunt"
+                        onclick={on_send_taunt}
+                        disabled={taunt_input.trim().is_empty()}
+                    >
+                        {"Send"}
+                    </button>
                 </div>
                 {
                     // Show taunt history

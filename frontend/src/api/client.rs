@@ -1,7 +1,7 @@
 /// HTTP client for backend API
 /// Only compiled for WASM target
 use gloo_net::http::Request;
-use shared::{GameState, MakeMoveRequest};
+use shared::{GameState, MakeMoveRequest, TauntRequest};
 
 const API_BASE: &str = "http://localhost:3000/api";
 
@@ -46,4 +46,21 @@ pub async fn make_move(row: u8, col: u8) -> Result<GameState, String> {
     }
 
     response.json().await.map_err(|e| e.to_string())
+}
+
+pub async fn send_taunt(message: String) -> Result<(), String> {
+    let request_body = TauntRequest { message };
+
+    let response = Request::post(&format!("{}/game/taunt", API_BASE))
+        .json(&request_body)
+        .map_err(|e| e.to_string())?
+        .send()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !response.ok() {
+        return Err(format!("HTTP {}", response.status()));
+    }
+
+    Ok(())
 }

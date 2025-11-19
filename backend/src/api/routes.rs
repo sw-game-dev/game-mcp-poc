@@ -111,8 +111,10 @@ async fn add_taunt(
 
     let mut manager = state.game_manager.lock().unwrap();
     manager.add_taunt(request.message)?;
+    let game_state = manager.get_game_state()?;
 
     info!("Taunt added successfully");
+    broadcast_state(&state, &game_state);
     Ok(StatusCode::OK)
 }
 
@@ -184,7 +186,7 @@ async fn mcp_handler(
         && !result.is_null()
     {
         let method = rpc_request.method.as_str();
-        if matches!(method, "make_move" | "restart_game") {
+        if matches!(method, "make_move" | "restart_game" | "taunt_player") {
             // Fetch updated state and broadcast
             let mut manager = state.game_manager.lock().unwrap();
             if let Ok(game_state) = manager.get_game_state() {
