@@ -274,8 +274,10 @@ fn test_mcp_taunt_persistence() {
     let taunts = state["result"]["taunts"].as_array().unwrap();
 
     assert_eq!(taunts.len(), 2);
-    assert_eq!(taunts[0], "First taunt");
-    assert_eq!(taunts[1], "Second taunt");
+    assert_eq!(taunts[0]["message"], "First taunt");
+    assert_eq!(taunts[0]["source"], "MCP");
+    assert_eq!(taunts[1]["message"], "Second taunt");
+    assert_eq!(taunts[1]["source"], "MCP");
 }
 
 #[test]

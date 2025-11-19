@@ -114,7 +114,7 @@ pub fn taunt_player(manager: &mut GameManager, params: Value) -> Result<Value, J
         .to_string();
 
     manager
-        .add_taunt(message)
+        .add_taunt(message, shared::MoveSource::MCP)
         .map_err(|e| JsonRpcError::internal_error(format!("Failed to add taunt: {}", e)))?;
 
     Ok(json!({

@@ -19,8 +19,27 @@ body {
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
+    max-width: 1200px;
     width: 100%;
+}
+
+.game-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 h1 {
@@ -32,6 +51,7 @@ h1 {
 .game-board-container {
     position: relative;
     margin: 20px auto;
+    width: 100%;
     max-width: 400px;
 }
 
@@ -220,11 +240,18 @@ button:disabled {
 
 .taunt-display {
     margin-bottom: 10px;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
 }
 
 .taunt-message {
     padding: 12px;
-    background: white;
+    margin-bottom: 8px;
+    background: #f9f9f9;
     border-radius: 6px;
     border-left: 4px solid #d33;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -348,4 +375,44 @@ button:disabled {
     color: #999;
     font-family: 'Courier New', monospace;
     border-top: 1px solid #eee;
+}
+
+.turn-indicator {
+    margin: 10px 0;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.turn-indicator.flash {
+    animation: flash 1.5s ease-in-out 3;
+}
+
+@keyframes flash {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+.latest-taunt {
+    animation: blink 0.5s ease-in-out 2;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
 }

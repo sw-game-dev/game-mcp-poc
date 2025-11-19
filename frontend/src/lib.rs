@@ -8,7 +8,7 @@ use shared::{Cell, GameState, GameStatus, MoveSource, Player};
 use yew::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
-use web_sys::{EventSource, HtmlInputElement};
+use web_sys::{EventSource, HtmlInputElement, KeyboardEvent};
 
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
@@ -165,7 +165,7 @@ fn app() -> Html {
         });
     }
 
-    // Track taunt count to detect new taunts from MCP agent
+    // Track taunt count to detect new taunts
     let prev_taunt_count = use_state(|| 0);
     {
         let prev_taunt_count = prev_taunt_count.clone();
@@ -179,7 +179,12 @@ fn app() -> Html {
                     // Log all new taunts
                     for i in *prev_taunt_count..current_count {
                         let taunt = &state.taunts[i];
-                        log_event.emit(format!("💬 MCP: {}", taunt));
+                        let prefix = match &taunt.source {
+                            Some(MoveSource::UI) => "💬 You:",
+                            Some(MoveSource::MCP) => "💬 MCP:",
+                            None => "💬",
+                        };
+                        log_event.emit(format!("{} {}", prefix, taunt.message));
                     }
                     prev_taunt_count.set(current_count);
                 }
@@ -287,7 +292,25 @@ fn app() -> Html {
             shared::GameStatus::Won(player) => format!("{} wins!", player),
             shared::GameStatus::Draw => "It's a draw!".to_string(),
         };
-        html! { <p>{format!("You are {}. {}", state.human_player, status_text)}</p> }
+
+        // Show turn indicator flash at game start (when move_history is empty or 1 move)
+        let turn_indicator =
+            if state.status == GameStatus::InProgress && state.move_history.len() <= 1 {
+                if state.current_turn == state.human_player {
+                    html! { <div class="turn-indicator flash">{"🎯 YOUR TURN!"}</div> }
+                } else {
+                    html! { <div class="turn-indicator flash">{"⏳ Opponent's turn..."}</div> }
+                }
+            } else {
+                html! {}
+            };
+
+        html! {
+            <>
+                <p>{format!("You are {}. {}", state.human_player, status_text)}</p>
+                {turn_indicator}
+            </>
+        }
     } else {
         html! { <p>{"Click 'New Game' to start"}</p> }
     };
@@ -434,31 +457,60 @@ fn app() -> Html {
             <div class="game-info">
                 {game_info}
             </div>
-            <div class="game-board-container">
-                <div class="game-board">
-                    {board_cells}
+            <div class="game-layout">
+                <div class="left-panel">
+                    <div class="game-board-container">
+                        <div class="game-board">
+                            {board_cells}
+                        </div>
+                        {draw_overlay}
+                    </div>
+                    <div class="controls">
+                        <button class="btn-primary" onclick={on_new_game} disabled={*loading}>
+                            {"New Game"}
+                        </button>
+                    </div>
+                    <div class="log-container">
+                        <h3>{"Event Log"}</h3>
+                        <div class="log-scroll">
+                            {log_entries}
+                        </div>
+                    </div>
                 </div>
-                {draw_overlay}
-            </div>
-            <div class="controls">
-                <button class="btn-primary" onclick={on_new_game} disabled={*loading}>
-                    {"New Game"}
-                </button>
-            </div>
-            <div class="chat-container">
+                <div class="right-panel">
+                    <div class="chat-container">
                 <h3>{"💬 Trash Talk"}</h3>
                 <div class="taunt-display">
                     {
                         if let Some(ref state) = *game_state {
-                            if let Some(latest_taunt) = state.taunts.last() {
-                                html! {
-                                    <div class="taunt-message">
-                                        <span class="taunt-label">{"MCP Agent: "}</span>
-                                        <span class="taunt-text">{latest_taunt}</span>
-                                    </div>
-                                }
-                            } else {
+                            if state.taunts.is_empty() {
                                 html! { <div class="taunt-empty">{"No taunts yet..."}</div> }
+                            } else {
+                                // Show all taunts in chronological order (oldest first)
+                                let taunt_count = state.taunts.len();
+                                let taunt_messages: Vec<_> = state.taunts.iter()
+                                    .enumerate()
+                                    .map(|(idx, taunt)| {
+                                        let label = match &taunt.source {
+                                            Some(MoveSource::UI) => "You: ",
+                                            Some(MoveSource::MCP) => "MCP Agent: ",
+                                            None => "Unknown: ",
+                                        };
+                                        // Add blink animation only to the latest taunt
+                                        let class = if idx == taunt_count - 1 {
+                                            "taunt-message latest-taunt"
+                                        } else {
+                                            "taunt-message"
+                                        };
+                                        html! {
+                                            <div class={class}>
+                                                <span class="taunt-label">{label}</span>
+                                                <span class="taunt-text">{&taunt.message}</span>
+                                            </div>
+                                        }
+                                    })
+                                    .collect();
+                                html! { <>{taunt_messages}</> }
                             }
                         } else {
                             html! { <div class="taunt-empty">{"Waiting for game..."}</div> }
@@ -472,6 +524,43 @@ fn app() -> Html {
                         placeholder="Type your taunt here..."
                         value={(*taunt_input).clone()}
                         oninput={on_taunt_input}
+                        onkeypress={
+                            #[cfg(target_arch = "wasm32")]
+                            {
+                                let taunt_input = taunt_input.clone();
+                                let log_event = log_event.clone();
+                                Callback::from(move |e: KeyboardEvent| {
+                                    if e.key() == "Enter" {
+                                        let message = (*taunt_input).clone();
+                                        if message.trim().is_empty() {
+                                            return;
+                                        }
+
+                                        let taunt_input = taunt_input.clone();
+                                        let log_event = log_event.clone();
+
+                                        log_event.emit(format!("💬 Sending taunt: {}", message));
+
+                                        wasm_bindgen_futures::spawn_local(async move {
+                                            match api::send_taunt(message).await {
+                                                Ok(_) => {
+                                                    info!("Taunt sent successfully");
+                                                    taunt_input.set(String::new());
+                                                }
+                                                Err(e) => {
+                                                    error!("Failed to send taunt: {}", e);
+                                                    log_event.emit(format!("❌ Failed to send taunt: {}", e));
+                                                }
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                            #[cfg(not(target_arch = "wasm32"))]
+                            {
+                                Callback::from(|_: KeyboardEvent| {})
+                            }
+                        }
                     />
                     <button
                         class="btn-taunt"
@@ -489,8 +578,15 @@ fn app() -> Html {
                                 .rev()
                                 .skip(1) // Skip the latest (already shown above)
                                 .take(3) // Show last 3
-                                .map(|taunt| html! {
-                                    <div class="taunt-history-item">{taunt}</div>
+                                .map(|taunt| {
+                                    let prefix = match &taunt.source {
+                                        Some(MoveSource::UI) => "You: ",
+                                        Some(MoveSource::MCP) => "MCP: ",
+                                        None => "",
+                                    };
+                                    html! {
+                                        <div class="taunt-history-item">{format!("{}{}", prefix, taunt.message)}</div>
+                                    }
                                 })
                                 .collect();
 
@@ -509,11 +605,7 @@ fn app() -> Html {
                         html! {}
                     }
                 }
-            </div>
-            <div class="log-container">
-                <h3>{"Event Log"}</h3>
-                <div class="log-scroll">
-                    {log_entries}
+                    </div>
                 </div>
             </div>
             <div class="build-info">

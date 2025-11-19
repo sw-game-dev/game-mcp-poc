@@ -110,7 +110,7 @@ async fn add_taunt(
     info!("POST /api/game/taunt - message: {}", request.message);
 
     let mut manager = state.game_manager.lock().unwrap();
-    manager.add_taunt(request.message)?;
+    manager.add_taunt(request.message, MoveSource::UI)?;
     let game_state = manager.get_game_state()?;
 
     info!("Taunt added successfully");

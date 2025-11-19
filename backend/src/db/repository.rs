@@ -222,7 +222,12 @@ impl GameRepository {
     }
 
     /// Save a taunt to the database
-    pub fn save_taunt(&self, game_id: &str, message: &str) -> Result<(), GameError> {
+    pub fn save_taunt(
+        &self,
+        game_id: &str,
+        message: &str,
+        source: Option<&str>,
+    ) -> Result<(), GameError> {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
@@ -230,8 +235,8 @@ impl GameRepository {
 
         self.conn
             .execute(
-                "INSERT INTO taunts (game_id, message, timestamp) VALUES (?1, ?2, ?3)",
-                params![game_id, message, now],
+                "INSERT INTO taunts (game_id, message, timestamp, source) VALUES (?1, ?2, ?3, ?4)",
+                params![game_id, message, now, source],
             )
             .map_err(|e| GameError::DatabaseError {
                 message: e.to_string(),
@@ -241,16 +246,32 @@ impl GameRepository {
     }
 
     /// Load all taunts for a game
-    pub fn load_taunts(&self, game_id: &str) -> Result<Vec<String>, GameError> {
+    pub fn load_taunts(&self, game_id: &str) -> Result<Vec<shared::Taunt>, GameError> {
         let mut stmt = self
             .conn
-            .prepare("SELECT message FROM taunts WHERE game_id = ?1 ORDER BY timestamp ASC")
+            .prepare(
+                "SELECT message, timestamp, source FROM taunts WHERE game_id = ?1 ORDER BY timestamp ASC",
+            )
             .map_err(|e| GameError::DatabaseError {
                 message: e.to_string(),
             })?;
 
         let taunts = stmt
-            .query_map(params![game_id], |row| row.get(0))
+            .query_map(params![game_id], |row| {
+                let message: String = row.get(0)?;
+                let timestamp: i64 = row.get(1)?;
+                let source_str: Option<String> = row.get(2)?;
+                let source = source_str.and_then(|s| match s.as_str() {
+                    "UI" => Some(shared::MoveSource::UI),
+                    "MCP" => Some(shared::MoveSource::MCP),
+                    _ => None,
+                });
+                Ok(shared::Taunt {
+                    message,
+                    timestamp,
+                    source,
+                })
+            })
             .map_err(|e| GameError::DatabaseError {
                 message: e.to_string(),
             })?;
@@ -405,15 +426,18 @@ mod tests {
         repo.save_game(&game).unwrap();
 
         // Save taunts
-        repo.save_taunt(&game_id, "You call that a move?").unwrap();
-        repo.save_taunt(&game_id, "I've seen better from a toddler!")
+        repo.save_taunt(&game_id, "You call that a move?", Some("MCP"))
+            .unwrap();
+        repo.save_taunt(&game_id, "I've seen better from a toddler!", Some("UI"))
             .unwrap();
 
         // Load taunts
         let taunts = repo.load_taunts(&game_id).unwrap();
         assert_eq!(taunts.len(), 2);
-        assert_eq!(taunts[0], "You call that a move?");
-        assert_eq!(taunts[1], "I've seen better from a toddler!");
+        assert_eq!(taunts[0].message, "You call that a move?");
+        assert_eq!(taunts[0].source, Some(shared::MoveSource::MCP));
+        assert_eq!(taunts[1].message, "I've seen better from a toddler!");
+        assert_eq!(taunts[1].source, Some(shared::MoveSource::UI));
     }
 
     #[test]

@@ -143,9 +143,13 @@ impl GameManager {
     }
 
     /// Add a taunt message
-    pub fn add_taunt(&mut self, message: String) -> Result<(), GameError> {
+    pub fn add_taunt(&mut self, message: String, source: MoveSource) -> Result<(), GameError> {
         let game = self.get_or_create_game()?;
-        self.repository.save_taunt(&game.id, &message)?;
+        let source_str = match source {
+            MoveSource::UI => Some("UI"),
+            MoveSource::MCP => Some("MCP"),
+        };
+        self.repository.save_taunt(&game.id, &message, source_str)?;
         Ok(())
     }
 
@@ -247,13 +251,15 @@ mod tests {
         let mut manager = create_test_manager();
         manager.get_or_create_game().unwrap();
 
-        let result = manager.add_taunt("You call that a move?".to_string());
+        let result =
+            manager.add_taunt("You call that a move?".to_string(), shared::MoveSource::MCP);
         assert!(result.is_ok());
 
         // Verify taunt is persisted
         let game = manager.get_game_state().unwrap();
         assert_eq!(game.taunts.len(), 1);
-        assert_eq!(game.taunts[0], "You call that a move?");
+        assert_eq!(game.taunts[0].message, "You call that a move?");
+        assert_eq!(game.taunts[0].source, Some(shared::MoveSource::MCP));
     }
 
     #[test]

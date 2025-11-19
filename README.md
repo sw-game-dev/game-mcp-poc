@@ -2,7 +2,7 @@
 
 A dual-interface tic-tac-toe game where **trash talk is part of the game!** Implements the **Model Context Protocol (MCP)** to enable AI agents like Claude Code to play AND taunt via a standardized tool interface.
 
-![Game Screenshot](./images/screenshot.png)
+![Game Screenshot](./images/screenshot.png?ts=1763533602045)
 
 ## 🎯 Project Status: MCP Server Complete ✅
 

@@ -66,6 +66,15 @@ pub struct Move {
     pub source: Option<MoveSource>,
 }
 
+/// A taunt message in the game
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Taunt {
+    pub message: String,
+    pub timestamp: i64,
+    #[serde(default)]
+    pub source: Option<MoveSource>,
+}
+
 /// Winning line positions
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WinningLine {
@@ -82,7 +91,7 @@ pub struct GameState {
     pub ai_player: Player,
     pub status: GameStatus,
     pub move_history: Vec<Move>,
-    pub taunts: Vec<String>,
+    pub taunts: Vec<Taunt>,
     #[serde(default)]
     pub winning_line: Option<WinningLine>,
 }
