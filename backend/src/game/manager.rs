@@ -2,7 +2,7 @@ use super::board::Board;
 use super::logic::get_game_status;
 use super::player::assign_players;
 use crate::db::repository::GameRepository;
-use shared::{Cell, GameError, GameState, GameStatus, Move};
+use shared::{Cell, GameError, GameState, GameStatus, Move, MoveSource};
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
 
@@ -59,6 +59,7 @@ impl GameManager {
             status: GameStatus::InProgress,
             move_history: vec![],
             taunts: vec![],
+            winning_line: None,
         };
 
         self.repository.save_game(&game)?;
@@ -69,7 +70,12 @@ impl GameManager {
     }
 
     /// Make a move on the board
-    pub fn make_move(&mut self, row: u8, col: u8) -> Result<GameState, GameError> {
+    pub fn make_move(
+        &mut self,
+        row: u8,
+        col: u8,
+        source: MoveSource,
+    ) -> Result<GameState, GameError> {
         let mut game = self.get_or_create_game()?;
 
         // Check if game is already over
@@ -104,6 +110,7 @@ impl GameManager {
             row,
             col,
             timestamp,
+            source: Some(source),
         };
 
         game.move_history.push(mov.clone());
@@ -114,7 +121,9 @@ impl GameManager {
         for m in &game.move_history {
             board.set(m.row, m.col, m.player).ok();
         }
-        game.status = get_game_status(&board);
+        let (status, winning_line) = get_game_status(&board);
+        game.status = status;
+        game.winning_line = winning_line;
 
         // Switch turns if game is still in progress
         if game.status == GameStatus::InProgress {
@@ -149,6 +158,7 @@ impl GameManager {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use shared::MoveSource;
 
     fn create_test_manager() -> GameManager {
         let db_path = format!("/tmp/test-game-{}.db", Uuid::new_v4());
@@ -180,7 +190,7 @@ mod tests {
     #[test]
     fn test_make_valid_move() {
         let mut manager = create_test_manager();
-        let game = manager.make_move(0, 0).unwrap();
+        let game = manager.make_move(0, 0, MoveSource::UI).unwrap();
 
         assert_eq!(game.move_history.len(), 1);
         assert_eq!(game.move_history[0].row, 0);
@@ -194,7 +204,7 @@ mod tests {
     #[test]
     fn test_make_move_out_of_bounds() {
         let mut manager = create_test_manager();
-        let result = manager.make_move(3, 0);
+        let result = manager.make_move(3, 0, MoveSource::UI);
 
         assert!(matches!(result, Err(GameError::OutOfBounds { .. })));
     }
@@ -202,8 +212,8 @@ mod tests {
     #[test]
     fn test_make_move_cell_occupied() {
         let mut manager = create_test_manager();
-        manager.make_move(1, 1).unwrap();
-        let result = manager.make_move(1, 1);
+        manager.make_move(1, 1, MoveSource::UI).unwrap();
+        let result = manager.make_move(1, 1, MoveSource::UI);
 
         assert!(matches!(result, Err(GameError::CellOccupied { .. })));
     }
@@ -211,10 +221,10 @@ mod tests {
     #[test]
     fn test_turn_switching() {
         let mut manager = create_test_manager();
-        let game1 = manager.make_move(0, 0).unwrap();
+        let game1 = manager.make_move(0, 0, MoveSource::UI).unwrap();
         let first_player = game1.move_history[0].player;
 
-        let game2 = manager.make_move(0, 1).unwrap();
+        let game2 = manager.make_move(0, 1, MoveSource::UI).unwrap();
         assert_eq!(game2.current_turn, first_player);
         assert_eq!(game2.move_history[1].player, first_player.opponent());
     }
@@ -222,7 +232,7 @@ mod tests {
     #[test]
     fn test_restart_game() {
         let mut manager = create_test_manager();
-        manager.make_move(0, 0).unwrap();
+        manager.make_move(0, 0, MoveSource::UI).unwrap();
         let game1_id = manager.current_game_id.clone().unwrap();
 
         let new_game = manager.restart_game().unwrap();
@@ -251,8 +261,8 @@ mod tests {
         let mut manager = create_test_manager();
 
         // Make moves and get game state
-        manager.make_move(0, 0).unwrap();
-        manager.make_move(1, 1).unwrap();
+        manager.make_move(0, 0, MoveSource::UI).unwrap();
+        manager.make_move(1, 1, MoveSource::UI).unwrap();
         let game_id = manager.current_game_id.clone().unwrap();
 
         // Get game state again - should have persistent moves
@@ -275,14 +285,14 @@ mod tests {
         // . . .
 
         // Simulate the moves directly to create a win
-        manager.make_move(0, 0).unwrap(); // X
-        manager.make_move(1, 0).unwrap(); // O
-        manager.make_move(0, 1).unwrap(); // X
-        manager.make_move(1, 1).unwrap(); // O
-        manager.make_move(0, 2).unwrap(); // X wins
+        manager.make_move(0, 0, MoveSource::UI).unwrap(); // X
+        manager.make_move(1, 0, MoveSource::UI).unwrap(); // O
+        manager.make_move(0, 1, MoveSource::UI).unwrap(); // X
+        manager.make_move(1, 1, MoveSource::UI).unwrap(); // O
+        manager.make_move(0, 2, MoveSource::UI).unwrap(); // X wins
 
         // Try to make another move
-        let result = manager.make_move(2, 0);
+        let result = manager.make_move(2, 0, MoveSource::UI);
         assert!(matches!(result, Err(GameError::GameOver { .. })));
     }
 }

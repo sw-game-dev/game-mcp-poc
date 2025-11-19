@@ -27,6 +27,7 @@ pub fn init_schema(conn: &Connection) -> Result<(), GameError> {
             row INTEGER NOT NULL,
             col INTEGER NOT NULL,
             timestamp INTEGER NOT NULL,
+            source TEXT,
             FOREIGN KEY (game_id) REFERENCES games(id)
         )",
         [],
@@ -34,6 +35,10 @@ pub fn init_schema(conn: &Connection) -> Result<(), GameError> {
     .map_err(|e| GameError::DatabaseError {
         message: e.to_string(),
     })?;
+
+    // Add source column to existing moves tables (migration)
+    // Ignore error if column already exists
+    let _ = conn.execute("ALTER TABLE moves ADD COLUMN source TEXT", []);
 
     conn.execute(
         "CREATE TABLE IF NOT EXISTS taunts (

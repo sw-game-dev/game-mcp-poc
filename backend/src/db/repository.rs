@@ -149,6 +149,7 @@ impl GameRepository {
             status: game.4,
             move_history: moves,
             taunts,
+            winning_line: None, // Will be computed from board state
         })
     }
 
@@ -159,10 +160,15 @@ impl GameRepository {
             Player::O => "O",
         };
 
+        let source_str = mov.source.as_ref().map(|s| match s {
+            shared::MoveSource::UI => "UI",
+            shared::MoveSource::MCP => "MCP",
+        });
+
         self.conn
             .execute(
-                "INSERT INTO moves (game_id, player, row, col, timestamp) VALUES (?1, ?2, ?3, ?4, ?5)",
-                params![game_id, player_str, mov.row, mov.col, mov.timestamp],
+                "INSERT INTO moves (game_id, player, row, col, timestamp, source) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+                params![game_id, player_str, mov.row, mov.col, mov.timestamp, source_str],
             )
             .map_err(|e| GameError::DatabaseError {
                 message: e.to_string(),
@@ -175,7 +181,7 @@ impl GameRepository {
     pub fn load_moves(&self, game_id: &str) -> Result<Vec<Move>, GameError> {
         let mut stmt = self
             .conn
-            .prepare("SELECT player, row, col, timestamp FROM moves WHERE game_id = ?1 ORDER BY timestamp ASC")
+            .prepare("SELECT player, row, col, timestamp, source FROM moves WHERE game_id = ?1 ORDER BY timestamp ASC")
             .map_err(|e| GameError::DatabaseError {
                 message: e.to_string(),
             })?;
@@ -189,11 +195,19 @@ impl GameRepository {
                     Player::O
                 };
 
+                let source_str: Option<String> = row.get(4).ok();
+                let source = source_str.and_then(|s| match s.as_str() {
+                    "UI" => Some(shared::MoveSource::UI),
+                    "MCP" => Some(shared::MoveSource::MCP),
+                    _ => None,
+                });
+
                 Ok(Move {
                     player,
                     row: row.get(1)?,
                     col: row.get(2)?,
                     timestamp: row.get(3)?,
+                    source,
                 })
             })
             .map_err(|e| GameError::DatabaseError {
@@ -302,6 +316,7 @@ impl GameRepository {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use shared::MoveSource;
     use uuid::Uuid;
 
     fn create_test_game() -> GameState {
@@ -314,6 +329,7 @@ mod tests {
             status: GameStatus::InProgress,
             move_history: vec![],
             taunts: vec![],
+            winning_line: None,
         }
     }
 
@@ -356,12 +372,14 @@ mod tests {
             row: 0,
             col: 0,
             timestamp: 1000,
+            source: Some(MoveSource::UI),
         };
         let move2 = Move {
             player: Player::O,
             row: 1,
             col: 1,
             timestamp: 2000,
+            source: Some(MoveSource::UI),
         };
 
         repo.save_move(&game_id, &move1).unwrap();
@@ -406,18 +424,21 @@ mod tests {
                 row: 0,
                 col: 0,
                 timestamp: 1000,
+                source: Some(MoveSource::UI),
             },
             Move {
                 player: Player::O,
                 row: 1,
                 col: 1,
                 timestamp: 2000,
+                source: Some(MoveSource::UI),
             },
             Move {
                 player: Player::X,
                 row: 2,
                 col: 2,
                 timestamp: 3000,
+                source: Some(MoveSource::UI),
             },
         ];
 

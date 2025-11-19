@@ -10,7 +10,7 @@ use axum::{
 };
 use futures::stream::{Stream, StreamExt};
 use serde_json::json;
-use shared::{GameError, GameState, MakeMoveRequest, TauntRequest};
+use shared::{GameError, GameState, MakeMoveRequest, MoveSource, TauntRequest};
 use std::convert::Infallible;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -95,7 +95,7 @@ async fn make_move(
     );
 
     let mut manager = state.game_manager.lock().unwrap();
-    let game_state = manager.make_move(request.row, request.col)?;
+    let game_state = manager.make_move(request.row, request.col, MoveSource::UI)?;
 
     info!("Move made successfully");
     broadcast_state(&state, &game_state);

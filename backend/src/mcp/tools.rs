@@ -3,7 +3,7 @@
 use super::protocol::JsonRpcError;
 use crate::game::manager::GameManager;
 use serde_json::{Value, json};
-use shared::GameError;
+use shared::{GameError, MoveSource};
 
 /// Handle the view_game_state tool call
 pub fn view_game_state(manager: &mut GameManager, _params: Value) -> Result<Value, JsonRpcError> {
@@ -67,18 +67,20 @@ pub fn make_move(manager: &mut GameManager, params: Value) -> Result<Value, Json
         JsonRpcError::invalid_params("Missing or invalid 'col' parameter".to_string())
     })? as u8;
 
-    let game = manager.make_move(row, col).map_err(|e| match e {
-        GameError::OutOfBounds { .. } => {
-            JsonRpcError::invalid_params(format!("Move out of bounds: {}", e))
-        }
-        GameError::CellOccupied { .. } => {
-            JsonRpcError::invalid_params(format!("Cell already occupied: {}", e))
-        }
-        GameError::GameOver { .. } => {
-            JsonRpcError::invalid_params(format!("Game is already over: {}", e))
-        }
-        _ => JsonRpcError::internal_error(format!("Failed to make move: {}", e)),
-    })?;
+    let game = manager
+        .make_move(row, col, MoveSource::MCP)
+        .map_err(|e| match e {
+            GameError::OutOfBounds { .. } => {
+                JsonRpcError::invalid_params(format!("Move out of bounds: {}", e))
+            }
+            GameError::CellOccupied { .. } => {
+                JsonRpcError::invalid_params(format!("Cell already occupied: {}", e))
+            }
+            GameError::GameOver { .. } => {
+                JsonRpcError::invalid_params(format!("Game is already over: {}", e))
+            }
+            _ => JsonRpcError::internal_error(format!("Failed to make move: {}", e)),
+        })?;
 
     Ok(json!({
         "success": true,

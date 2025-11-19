@@ -4,7 +4,7 @@ use log::info;
 
 #[cfg(target_arch = "wasm32")]
 use log::error;
-use shared::{Cell, GameState, Player};
+use shared::{Cell, GameState, GameStatus, MoveSource, Player};
 use yew::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
@@ -136,7 +136,7 @@ fn app() -> Html {
         });
     }
 
-    // Track move count to detect changes
+    // Track move count to detect changes and log with source
     let prev_move_count = use_state(|| 0);
     {
         let prev_move_count = prev_move_count.clone();
@@ -148,9 +148,14 @@ fn app() -> Html {
                 let current_count = state.move_history.len();
                 if current_count > *prev_move_count {
                     let last_move = &state.move_history[current_count - 1];
+                    let source_prefix = match &last_move.source {
+                        Some(MoveSource::UI) => "UI:",
+                        Some(MoveSource::MCP) => "MCP:",
+                        None => "",
+                    };
                     log_event.emit(format!(
-                        "🎮 {} moved to ({}, {})",
-                        last_move.player, last_move.row, last_move.col
+                        "{} 🎮 {} moved to ({}, {})",
+                        source_prefix, last_move.player, last_move.row, last_move.col
                     ));
                     prev_move_count.set(current_count);
                 }
@@ -210,20 +215,101 @@ fn app() -> Html {
         html! { <p>{"Click 'New Game' to start"}</p> }
     };
 
+    // Cell click handler
+    let on_cell_click = {
+        #[cfg(target_arch = "wasm32")]
+        let game_state = game_state.clone();
+        #[cfg(target_arch = "wasm32")]
+        let log_event = log_event.clone();
+
+        Callback::from(move |(row, col): (u8, u8)| {
+            #[cfg(target_arch = "wasm32")]
+            {
+                let game_state = game_state.clone();
+                let log_event = log_event.clone();
+
+                // Check if it's a valid move
+                if let Some(ref state) = *game_state {
+                    // Can't move if game is over
+                    if state.status != GameStatus::InProgress {
+                        log_event.emit("⚠️ Game is over! Start a new game.".to_string());
+                        return;
+                    }
+
+                    // Can't move if not human's turn
+                    if state.current_turn != state.human_player {
+                        log_event.emit("⚠️ It's not your turn!".to_string());
+                        return;
+                    }
+
+                    // Can't move if cell is occupied
+                    if state.board[row as usize][col as usize] != Cell::Empty {
+                        log_event.emit("⚠️ Cell is already occupied!".to_string());
+                        return;
+                    }
+
+                    // Make the move
+                    log_event.emit(format!("📤 Sending move to ({}, {})...", row, col));
+
+                    wasm_bindgen_futures::spawn_local({
+                        let log_event = log_event.clone();
+                        async move {
+                            match api::make_move(row, col).await {
+                                Ok(_) => {
+                                    info!("Move made successfully");
+                                    // State will be updated via SSE
+                                }
+                                Err(e) => {
+                                    error!("Failed to make move: {}", e);
+                                    log_event.emit(format!("❌ Move failed: {}", e));
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            #[cfg(not(target_arch = "wasm32"))]
+            {
+                let _ = (row, col);
+            }
+        })
+    };
+
     let board_cells = if let Some(ref state) = *game_state {
         (0..9)
             .map(|i| {
-                let row = i / 3;
-                let col = i % 3;
-                let cell = state.board[row][col];
+                let row = (i / 3) as u8;
+                let col = (i % 3) as u8;
+                let cell = state.board[row as usize][col as usize];
                 let cell_text = match cell {
                     Cell::Empty => "",
                     Cell::Occupied(Player::X) => "X",
                     Cell::Occupied(Player::O) => "O",
                 };
 
+                // Check if this cell is part of winning line
+                let is_winning_cell = if let Some(ref winning_line) = state.winning_line {
+                    winning_line
+                        .positions
+                        .iter()
+                        .any(|(r, c)| *r == row && *c == col)
+                } else {
+                    false
+                };
+
+                let cell_class = if is_winning_cell {
+                    "cell winning-cell"
+                } else {
+                    "cell"
+                };
+
+                let onclick = on_cell_click.clone();
+                let onclick_handler = Callback::from(move |_| {
+                    onclick.emit((row, col));
+                });
+
                 html! {
-                    <div class="cell" key={i}>
+                    <div class={cell_class} key={i} onclick={onclick_handler}>
                         {cell_text}
                     </div>
                 }
@@ -250,14 +336,32 @@ fn app() -> Html {
         })
         .collect::<Html>();
 
+    // Draw overlay
+    let draw_overlay = if let Some(ref state) = *game_state {
+        if state.status == GameStatus::Draw {
+            html! {
+                <div class="game-overlay">
+                    <div class="draw-text">{"DRAW"}</div>
+                </div>
+            }
+        } else {
+            html! {}
+        }
+    } else {
+        html! {}
+    };
+
     html! {
         <div class="app-container">
             <h1>{"Tic-Tac-Toe MCP Game"}</h1>
             <div class="game-info">
                 {game_info}
             </div>
-            <div class="game-board">
-                {board_cells}
+            <div class="game-board-container">
+                <div class="game-board">
+                    {board_cells}
+                </div>
+                {draw_overlay}
             </div>
             <div class="controls">
                 <button class="btn-primary" onclick={on_new_game} disabled={*loading}>
@@ -269,6 +373,9 @@ fn app() -> Html {
                 <div class="log-scroll">
                     {log_entries}
                 </div>
+            </div>
+            <div class="build-info">
+                {format!("Build: {} @ {}", shared::build_info::GIT_SHA, shared::build_info::BUILD_TIME)}
             </div>
         </div>
     }

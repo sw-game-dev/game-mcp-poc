@@ -1,29 +1,54 @@
 use super::board::Board;
-use shared::{Cell, GameStatus, Player};
+use shared::{Cell, GameStatus, Player, WinningLine};
 
-/// Check if there's a winner on the board
+/// Check if there's a winner on the board and return winner with winning line
 #[allow(dead_code)] // Will be used by game state management
-pub fn check_winner(board: &Board) -> Option<Player> {
+pub fn check_winner(board: &Board) -> Option<(Player, WinningLine)> {
     // Check rows
     for row in 0..3 {
-        if let Some(winner) = check_line(board, [(row, 0), (row, 1), (row, 2)]) {
-            return Some(winner);
+        let positions = [(row, 0), (row, 1), (row, 2)];
+        if let Some(winner) = check_line(board, positions) {
+            return Some((
+                winner,
+                WinningLine {
+                    positions: positions.to_vec(),
+                },
+            ));
         }
     }
 
     // Check columns
     for col in 0..3 {
-        if let Some(winner) = check_line(board, [(0, col), (1, col), (2, col)]) {
-            return Some(winner);
+        let positions = [(0, col), (1, col), (2, col)];
+        if let Some(winner) = check_line(board, positions) {
+            return Some((
+                winner,
+                WinningLine {
+                    positions: positions.to_vec(),
+                },
+            ));
         }
     }
 
     // Check diagonals
-    if let Some(winner) = check_line(board, [(0, 0), (1, 1), (2, 2)]) {
-        return Some(winner);
+    let positions = [(0, 0), (1, 1), (2, 2)];
+    if let Some(winner) = check_line(board, positions) {
+        return Some((
+            winner,
+            WinningLine {
+                positions: positions.to_vec(),
+            },
+        ));
     }
-    if let Some(winner) = check_line(board, [(0, 2), (1, 1), (2, 0)]) {
-        return Some(winner);
+
+    let positions = [(0, 2), (1, 1), (2, 0)];
+    if let Some(winner) = check_line(board, positions) {
+        return Some((
+            winner,
+            WinningLine {
+                positions: positions.to_vec(),
+            },
+        ));
     }
 
     None
@@ -49,15 +74,15 @@ fn check_line(board: &Board, positions: [(u8, u8); 3]) -> Option<Player> {
     }
 }
 
-/// Determine the current game status
+/// Determine the current game status and return optional winning line
 #[allow(dead_code)] // Will be used by game state management
-pub fn get_game_status(board: &Board) -> GameStatus {
-    if let Some(winner) = check_winner(board) {
-        GameStatus::Won(winner)
+pub fn get_game_status(board: &Board) -> (GameStatus, Option<WinningLine>) {
+    if let Some((winner, line)) = check_winner(board) {
+        (GameStatus::Won(winner), Some(line))
     } else if board.is_full() {
-        GameStatus::Draw
+        (GameStatus::Draw, None)
     } else {
-        GameStatus::InProgress
+        (GameStatus::InProgress, None)
     }
 }
 
@@ -77,7 +102,9 @@ mod tests {
         board.set(0, 0, Player::X).unwrap();
         board.set(0, 1, Player::X).unwrap();
         board.set(0, 2, Player::X).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::X));
+        let (winner, line) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::X);
+        assert_eq!(line.positions, vec![(0, 0), (0, 1), (0, 2)]);
     }
 
     #[test]
@@ -86,7 +113,8 @@ mod tests {
         board.set(1, 0, Player::O).unwrap();
         board.set(1, 1, Player::O).unwrap();
         board.set(1, 2, Player::O).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::O));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::O);
     }
 
     #[test]
@@ -95,7 +123,8 @@ mod tests {
         board.set(2, 0, Player::X).unwrap();
         board.set(2, 1, Player::X).unwrap();
         board.set(2, 2, Player::X).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::X));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::X);
     }
 
     #[test]
@@ -104,7 +133,8 @@ mod tests {
         board.set(0, 0, Player::O).unwrap();
         board.set(1, 0, Player::O).unwrap();
         board.set(2, 0, Player::O).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::O));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::O);
     }
 
     #[test]
@@ -113,7 +143,8 @@ mod tests {
         board.set(0, 1, Player::X).unwrap();
         board.set(1, 1, Player::X).unwrap();
         board.set(2, 1, Player::X).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::X));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::X);
     }
 
     #[test]
@@ -122,7 +153,8 @@ mod tests {
         board.set(0, 2, Player::O).unwrap();
         board.set(1, 2, Player::O).unwrap();
         board.set(2, 2, Player::O).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::O));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::O);
     }
 
     #[test]
@@ -131,7 +163,8 @@ mod tests {
         board.set(0, 0, Player::X).unwrap();
         board.set(1, 1, Player::X).unwrap();
         board.set(2, 2, Player::X).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::X));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::X);
     }
 
     #[test]
@@ -140,7 +173,8 @@ mod tests {
         board.set(0, 2, Player::O).unwrap();
         board.set(1, 1, Player::O).unwrap();
         board.set(2, 0, Player::O).unwrap();
-        assert_eq!(check_winner(&board), Some(Player::O));
+        let (winner, _) = check_winner(&board).unwrap();
+        assert_eq!(winner, Player::O);
     }
 
     #[test]
@@ -156,7 +190,9 @@ mod tests {
     fn test_game_status_in_progress() {
         let mut board = Board::new();
         board.set(0, 0, Player::X).unwrap();
-        assert_eq!(get_game_status(&board), GameStatus::InProgress);
+        let (status, line) = get_game_status(&board);
+        assert_eq!(status, GameStatus::InProgress);
+        assert_eq!(line, None);
     }
 
     #[test]
@@ -165,7 +201,9 @@ mod tests {
         board.set(0, 0, Player::X).unwrap();
         board.set(0, 1, Player::X).unwrap();
         board.set(0, 2, Player::X).unwrap();
-        assert_eq!(get_game_status(&board), GameStatus::Won(Player::X));
+        let (status, line) = get_game_status(&board);
+        assert_eq!(status, GameStatus::Won(Player::X));
+        assert!(line.is_some());
     }
 
     #[test]
@@ -185,6 +223,8 @@ mod tests {
         board.set(2, 1, Player::X).unwrap();
         board.set(2, 2, Player::X).unwrap();
 
-        assert_eq!(get_game_status(&board), GameStatus::Draw);
+        let (status, line) = get_game_status(&board);
+        assert_eq!(status, GameStatus::Draw);
+        assert_eq!(line, None);
     }
 }

@@ -3,6 +3,10 @@ set -e
 
 echo "Building game-mcp-poc..."
 
+# Generate build info
+echo "Generating build info..."
+./scripts/generate-build-info.sh
+
 # Build backend
 echo "Building backend..."
 cargo build --package backend --release

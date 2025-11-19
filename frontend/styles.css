@@ -29,12 +29,16 @@ h1 {
     margin-bottom: 20px;
 }
 
+.game-board-container {
+    position: relative;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
 .game-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin: 20px auto;
-    max-width: 400px;
 }
 
 .cell {
@@ -49,6 +53,22 @@ h1 {
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
+}
+
+.cell.winning-cell {
+    background: #ffcccc;
+    border-color: #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    animation: pulse-win 1s ease-in-out infinite;
+}
+
+@keyframes pulse-win {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    }
 }
 
 .cell:hover:not(.filled) {
@@ -143,4 +163,53 @@ button {
     text-align: center;
     padding: 40px;
     color: #666;
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.draw-text {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: pulse-draw 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-draw {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.build-info {
+    margin-top: 15px;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #999;
+    font-family: 'Courier New', monospace;
+    border-top: 1px solid #eee;
 }

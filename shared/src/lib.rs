@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+// Build info module
+pub mod build_info;
+
 /// Player representation (X or O)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Player {
@@ -43,6 +46,15 @@ pub enum GameStatus {
     Draw,
 }
 
+/// Source of the move (UI or MCP)
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MoveSource {
+    #[serde(rename = "UI")]
+    UI,
+    #[serde(rename = "MCP")]
+    MCP,
+}
+
 /// A single move in the game
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Move {
@@ -50,6 +62,14 @@ pub struct Move {
     pub row: u8,
     pub col: u8,
     pub timestamp: i64,
+    #[serde(default)]
+    pub source: Option<MoveSource>,
+}
+
+/// Winning line positions
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct WinningLine {
+    pub positions: Vec<(u8, u8)>,
 }
 
 /// Complete game state
@@ -63,6 +83,8 @@ pub struct GameState {
     pub status: GameStatus,
     pub move_history: Vec<Move>,
     pub taunts: Vec<String>,
+    #[serde(default)]
+    pub winning_line: Option<WinningLine>,
 }
 
 /// API request to make a move
