@@ -137,54 +137,56 @@ sequenceDiagram
     end
 ```
 
-### 3. Game State Polling
+### 3. Real-time Game State Updates (SSE)
 
-The UI periodically polls for state changes (e.g., when AI makes a move):
+The UI receives real-time state changes via Server-Sent Events (e.g., when AI makes a move):
 
 ```mermaid
 sequenceDiagram
     participant UI as Yew App
     participant Backend
     participant DB
+    participant Agent
 
-    loop Every 2 seconds
-        UI->>Backend: GET /api/game/state
-        Backend->>DB: SELECT game state
-        DB->>Backend: Current state
-        Backend->>UI: GameState JSON
+    Note over UI,Backend: SSE Connection Established on /api/events
 
-        alt State changed
-            UI->>UI: Update game_state
-            UI->>UI: Re-render components
-            Note over UI: Board updates
-            Note over UI: Status updates
-        else State unchanged
-            Note over UI: No re-render
-        end
-    end
+    Agent->>Backend: Make move via MCP
+    Backend->>DB: UPDATE game state
+    DB->>Backend: Success
+    Backend->>Backend: Broadcast via SSE channel
+    Backend-->>UI: SSE event: Complete GameState
+    UI->>UI: Update game_state
+    UI->>UI: Re-render components
+    Note over UI: Board updates instantly
+    Note over UI: Status updates instantly
+    Note over UI: Moves logged to Event Log
 ```
 
-### 4. Receiving Taunts
+**Implementation**: The frontend establishes a persistent SSE connection on component mount. All game state changes (moves, taunts, restarts) are broadcast immediately to all connected clients. No polling is required.
+
+### 4. Receiving Taunts (via SSE)
 
 ```mermaid
 sequenceDiagram
     participant UI
     participant Backend
     participant DB
+    participant Agent
 
-    loop Every 5 seconds
-        UI->>Backend: GET /api/taunts
-        Backend->>DB: SELECT * FROM taunts ORDER BY timestamp DESC LIMIT 10
-        DB->>Backend: Taunt messages
-        Backend->>UI: Array of taunts
+    Note over UI,Backend: SSE Connection Established
 
-        alt New taunts
-            UI->>UI: Append to logs
-            UI->>UI: Scroll log panel
-            Note over UI: "AI: Nice try, human!"
-        end
-    end
+    Agent->>Backend: POST /api/game/taunt {message}
+    Backend->>DB: INSERT INTO taunts
+    DB->>Backend: Success
+    Backend->>Backend: Broadcast via SSE
+    Backend-->>UI: SSE event: GameState (includes taunts)
+    UI->>UI: Detect new taunt
+    UI->>UI: Display in "Trash Talk" panel
+    UI->>UI: Log to Event Log
+    Note over UI: 💬 MCP: "Nice try, human!"
 ```
+
+**Note**: Taunts are delivered in real-time via Server-Sent Events (SSE), not polling. The frontend maintains an SSE connection to `/api/events` which receives complete game state updates whenever any change occurs (moves, taunts, game restarts).
 
 ### 5. Restarting Game
 

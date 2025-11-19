@@ -469,20 +469,19 @@ sequenceDiagram
     Logic->>MCP: Move successful
     MCP->>Agent: "Move placed at (1,1)"
 
-    Note over UI: UI polls state
-    UI->>Logic: GET /api/game/state
-    Logic->>UI: Updated state
-    Note over UI: Board updates
+    Note over UI: UI receives SSE update
+    Logic-->>UI: SSE event: Updated GameState
+    Note over UI: Board updates instantly
 
     Agent->>MCP: taunt_player("Too easy!")
     MCP->>Logic: Store taunt
     Logic->>MCP: Taunt saved
+    Logic-->>UI: SSE event: GameState (with taunt)
     MCP->>Agent: "Taunt sent"
 
-    Note over UI: UI polls taunts
-    UI->>Logic: GET /api/taunts
-    Logic->>UI: ["Too easy!"]
-    Note over UI: Taunt displayed
+    Note over UI: Taunt displayed in real-time
+    Note over UI: Shown in "Trash Talk" panel
+    Note over UI: Logged to Event Log
 
     Note over Agent,UI: Human makes move via UI
 

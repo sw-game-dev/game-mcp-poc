@@ -164,6 +164,29 @@ fn app() -> Html {
         });
     }
 
+    // Track taunt count to detect new taunts from MCP agent
+    let prev_taunt_count = use_state(|| 0);
+    {
+        let prev_taunt_count = prev_taunt_count.clone();
+        let log_event = log_event.clone();
+        let game_state = game_state.clone();
+
+        use_effect_with(game_state.clone(), move |state| {
+            if let Some(state) = state.as_ref() {
+                let current_count = state.taunts.len();
+                if current_count > *prev_taunt_count {
+                    // Log all new taunts
+                    for i in *prev_taunt_count..current_count {
+                        let taunt = &state.taunts[i];
+                        log_event.emit(format!("💬 MCP: {}", taunt));
+                    }
+                    prev_taunt_count.set(current_count);
+                }
+            }
+            || ()
+        });
+    }
+
     let on_new_game = {
         #[cfg(target_arch = "wasm32")]
         let game_state = game_state.clone();
@@ -367,6 +390,55 @@ fn app() -> Html {
                 <button class="btn-primary" onclick={on_new_game} disabled={*loading}>
                     {"New Game"}
                 </button>
+            </div>
+            <div class="chat-container">
+                <h3>{"💬 Trash Talk"}</h3>
+                <div class="taunt-display">
+                    {
+                        if let Some(ref state) = *game_state {
+                            if let Some(latest_taunt) = state.taunts.last() {
+                                html! {
+                                    <div class="taunt-message">
+                                        <span class="taunt-label">{"MCP Agent: "}</span>
+                                        <span class="taunt-text">{latest_taunt}</span>
+                                    </div>
+                                }
+                            } else {
+                                html! { <div class="taunt-empty">{"No taunts yet..."}</div> }
+                            }
+                        } else {
+                            html! { <div class="taunt-empty">{"Waiting for game..."}</div> }
+                        }
+                    }
+                </div>
+                {
+                    // Show taunt history
+                    if let Some(ref state) = *game_state {
+                        if state.taunts.len() > 1 {
+                            let taunt_history: Vec<_> = state.taunts.iter()
+                                .rev()
+                                .skip(1) // Skip the latest (already shown above)
+                                .take(3) // Show last 3
+                                .map(|taunt| html! {
+                                    <div class="taunt-history-item">{taunt}</div>
+                                })
+                                .collect();
+
+                            html! {
+                                <div class="taunt-history">
+                                    <details>
+                                        <summary>{"Previous taunts"}</summary>
+                                        {taunt_history}
+                                    </details>
+                                </div>
+                            }
+                        } else {
+                            html! {}
+                        }
+                    } else {
+                        html! {}
+                    }
+                }
             </div>
             <div class="log-container">
                 <h3>{"Event Log"}</h3>
