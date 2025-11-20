@@ -87,21 +87,113 @@ impl<'a> McpServer<'a> {
 
     /// Dispatch a method call to the appropriate tool handler
     fn dispatch(&mut self, method: &str, params: Value) -> Result<Value, JsonRpcError> {
-        let manager = self.get_manager();
-
         match method {
-            "view_game_state" => tools::view_game_state(manager, params),
-            "get_turn" => tools::get_turn(manager, params),
-            "make_move" => tools::make_move(manager, params),
-            "taunt_player" => tools::taunt_player(manager, params),
-            "restart_game" => tools::restart_game(manager, params),
-            "get_game_history" => tools::get_game_history(manager, params),
+            // MCP protocol methods
+            "initialize" => Self::handle_initialize(params),
+            "tools/list" => Self::handle_tools_list(params),
+            // Game tool methods
+            "view_game_state" => tools::view_game_state(self.get_manager(), params),
+            "get_turn" => tools::get_turn(self.get_manager(), params),
+            "make_move" => tools::make_move(self.get_manager(), params),
+            "taunt_player" => tools::taunt_player(self.get_manager(), params),
+            "restart_game" => tools::restart_game(self.get_manager(), params),
+            "get_game_history" => tools::get_game_history(self.get_manager(), params),
             _ => Err(JsonRpcError {
                 code: METHOD_NOT_FOUND,
                 message: format!("Method '{}' not found", method),
                 data: None,
             }),
         }
+    }
+
+    /// Handle MCP initialize request
+    fn handle_initialize(_params: Value) -> Result<Value, JsonRpcError> {
+        Ok(serde_json::json!({
+            "protocolVersion": "2024-11-05",
+            "serverInfo": {
+                "name": "tictactoe-mcp-server",
+                "version": "0.1.0"
+            },
+            "capabilities": {
+                "tools": {}
+            }
+        }))
+    }
+
+    /// Handle MCP tools/list request
+    fn handle_tools_list(_params: Value) -> Result<Value, JsonRpcError> {
+        Ok(serde_json::json!({
+            "tools": [
+                {
+                    "name": "view_game_state",
+                    "description": "View the current tic-tac-toe game state including board, turn, status, and history",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                {
+                    "name": "get_turn",
+                    "description": "Get whose turn it is (X or O)",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                {
+                    "name": "make_move",
+                    "description": "Make a move on the tic-tac-toe board",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "row": {
+                                "type": "integer",
+                                "description": "Row index (0-2)",
+                                "minimum": 0,
+                                "maximum": 2
+                            },
+                            "col": {
+                                "type": "integer",
+                                "description": "Column index (0-2)",
+                                "minimum": 0,
+                                "maximum": 2
+                            }
+                        },
+                        "required": ["row", "col"]
+                    }
+                },
+                {
+                    "name": "taunt_player",
+                    "description": "Send a trash talk message to your opponent",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "description": "The taunt message to send"
+                            }
+                        },
+                        "required": ["message"]
+                    }
+                },
+                {
+                    "name": "restart_game",
+                    "description": "Restart the game with a fresh board",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                },
+                {
+                    "name": "get_game_history",
+                    "description": "Get the complete history of moves made in the current game",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {}
+                    }
+                }
+            ]
+        }))
     }
 }
 

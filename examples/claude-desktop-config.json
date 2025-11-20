@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "tictactoe": {
+      "command": "/path/to/game-mcp-poc/target/release/game-mcp-server",
+      "env": {
+        "GAME_DB_PATH": "/path/to/game-mcp-poc/game.db"
+      }
+    }
+  }
+}
