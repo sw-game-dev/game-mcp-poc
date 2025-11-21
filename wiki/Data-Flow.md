@@ -229,7 +229,7 @@ sequenceDiagram
     participant MCP as MCP Server
     participant Auth as Authentication
 
-    Agent->>MCP: TCP Connect (127.0.0.1:3001)
+    Agent->>MCP: HTTP POST /mcp (127.0.0.1:7397)
     MCP->>Agent: Connection Established
 
     Agent->>MCP: {"method": "initialize", ...}

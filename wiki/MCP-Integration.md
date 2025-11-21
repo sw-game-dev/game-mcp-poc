@@ -357,8 +357,8 @@ use tokio::net::{TcpListener, TcpStream};
 use serde_json::Value;
 
 pub async fn start_server(repo: Arc<dyn GameRepository>) -> Result<()> {
-    let listener = TcpListener::bind("127.0.0.1:3001").await?;
-    tracing::info!("MCP server listening on port 3001");
+    let listener = TcpListener::bind("127.0.0.1:7397").await?;
+    tracing::info!("MCP server listening on port 7397");
 
     loop {
         let (stream, addr) = listener.accept().await?;

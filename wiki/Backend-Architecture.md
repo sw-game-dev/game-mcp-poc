@@ -98,7 +98,7 @@ async fn main() {
         .layer(Extension(sse_tx));
 
     // Start HTTP server (serves REST + MCP + SSE + static files)
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 7397));
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await?;
