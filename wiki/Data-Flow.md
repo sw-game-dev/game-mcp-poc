@@ -14,6 +14,7 @@ Both interact with the same underlying game state, enabling hybrid human-AI game
 ## System Data Flow
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     subgraph "Client Layer"
         Browser[Web Browser<br/>Yew/WASM]
@@ -52,10 +53,10 @@ graph TB
     Logic <--> Repo
     Repo <--> DB
 
-    style Browser fill:#e1bee7,color:#000
-    style Agent fill:#c8e6c9,color:#000
-    style Logic fill:#ffccbc,color:#000
-    style DB fill:#fff9c4,color:#000
+    style Browser fill:#f4e8f7,color:#000
+    style Agent fill:#e8f5e9,color:#000
+    style Logic fill:#ffe0d1,color:#000
+    style DB fill:#fffde7,color:#000
 ```
 
 ## Human Player Flows
@@ -63,6 +64,7 @@ graph TB
 ### 1. Initial Page Load
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Browser
     participant Backend as Backend Server
@@ -94,6 +96,7 @@ sequenceDiagram
 ### 2. Making a Move
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant User
     participant UI as Yew Component
@@ -142,6 +145,7 @@ sequenceDiagram
 The UI receives real-time state changes via Server-Sent Events (e.g., when AI makes a move):
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant UI as Yew App
     participant Backend
@@ -167,6 +171,7 @@ sequenceDiagram
 ### 4. Receiving Taunts (via SSE)
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant UI
     participant Backend
@@ -191,6 +196,7 @@ sequenceDiagram
 ### 5. Restarting Game
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant User
     participant UI
@@ -224,6 +230,7 @@ sequenceDiagram
 ### 1. Connecting to MCP Server
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Agent as AI Agent
     participant MCP as MCP Server
@@ -245,6 +252,7 @@ sequenceDiagram
 ### 2. Making Strategic Move
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Agent as AI Agent
     participant MCP as MCP Server
@@ -292,6 +300,7 @@ sequenceDiagram
 ### 3. Game History Analysis
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Agent
     participant MCP
@@ -318,6 +327,7 @@ sequenceDiagram
 Human and AI playing together:
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Human
     participant UI
@@ -363,6 +373,7 @@ sequenceDiagram
 ## State Synchronization
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Game State Change] --> B{Change Source}
 
@@ -382,11 +393,11 @@ graph TB
     H --> J[UI Re-renders]
     I --> K[AI Makes Decision]
 
-    style A fill:#ffe082,color:#000
-    style F fill:#ffccbc,color:#000
-    style G fill:#fff9c4,color:#000
-    style J fill:#c8e6c9,color:#000
-    style K fill:#bbdefb,color:#000
+    style A fill:#fff9e6,color:#000
+    style F fill:#ffe0d1,color:#000
+    style G fill:#fffde7,color:#000
+    style J fill:#e8f5e9,color:#000
+    style K fill:#e3f2fd,color:#000
 ```
 
 ## Data Models
@@ -443,6 +454,7 @@ pub struct Move {
 ### Database Schema Flow
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[GameState Struct] -->|Serialize| B[JSON]
     B -->|HTTP Response| C[Client]
@@ -455,14 +467,15 @@ graph LR
 
     A -->|UPDATE| J[(games table)]
 
-    style A fill:#e1bee7,color:#000
-    style B fill:#bbdefb,color:#000
-    style D fill:#fff9c4,color:#000
+    style A fill:#f4e8f7,color:#000
+    style B fill:#e3f2fd,color:#000
+    style D fill:#fffde7,color:#000
 ```
 
 ## Error Propagation
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TD
     A[Error Occurs] --> B{Error Layer}
 
@@ -485,13 +498,13 @@ graph TD
     J --> L[Display to User]
     K --> M[Retry or Fallback Strategy]
 
-    style A fill:#ffcdd2,color:#000
-    style C fill:#ffccbc,color:#000
-    style D fill:#ffccbc,color:#000
-    style E fill:#ffccbc,color:#000
-    style F fill:#ffccbc,color:#000
-    style L fill:#ffe082,color:#000
-    style M fill:#ffe082,color:#000
+    style A fill:#ffebee,color:#000
+    style C fill:#ffe0d1,color:#000
+    style D fill:#ffe0d1,color:#000
+    style E fill:#ffe0d1,color:#000
+    style F fill:#ffe0d1,color:#000
+    style L fill:#fff9e6,color:#000
+    style M fill:#fff9e6,color:#000
 ```
 
 **Error Mapping Table:**
@@ -509,6 +522,7 @@ graph TD
 ### Caching Strategy
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Request] --> B{Cache Layer}
 
@@ -522,9 +536,9 @@ graph TB
     H[State Mutation] --> I[Invalidate Cache]
     I --> D
 
-    style C fill:#c8e6c9,color:#000
-    style D fill:#fff9c4,color:#000
-    style I fill:#ffccbc,color:#000
+    style C fill:#e8f5e9,color:#000
+    style D fill:#fffde7,color:#000
+    style I fill:#ffe0d1,color:#000
 ```
 
 **Current Implementation:** No caching (simplicity)
@@ -533,6 +547,7 @@ graph TB
 ### Database Connection Pooling
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[Request 1] --> B[Connection Pool]
     C[Request 2] --> B
@@ -549,8 +564,8 @@ graph LR
     H --> I[Concurrent Reads]
     H --> J[Serialized Writes]
 
-    style B fill:#bbdefb,color:#000
-    style H fill:#fff9c4,color:#000
+    style B fill:#e3f2fd,color:#000
+    style H fill:#fffde7,color:#000
 ```
 
 **SQLite WAL Mode Benefits:**
@@ -561,6 +576,7 @@ graph LR
 ## Logging Flow
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Event Occurs] --> B{Event Type}
 
@@ -577,9 +593,9 @@ graph TB
     F --> J[Server Logs]
     H --> K[Player Visibility]
 
-    style C fill:#e1bee7,color:#000
-    style D fill:#bbdefb,color:#000
-    style H fill:#c8e6c9,color:#000
+    style C fill:#f4e8f7,color:#000
+    style D fill:#e3f2fd,color:#000
+    style H fill:#e8f5e9,color:#000
 ```
 
 **Log Levels:**

@@ -15,6 +15,7 @@ The architecture follows these core principles:
 ## High-Level Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     subgraph "Client Interfaces"
         Human[Human Player<br/>Web Browser]
@@ -47,11 +48,11 @@ graph TB
     Game --> Repo
     Repo --> SQLite
 
-    style UI fill:#e1bee7,stroke:#333,stroke-width:2px
-    style REST fill:#bbdefb,stroke:#333,stroke-width:2px
-    style MCP fill:#c8e6c9,stroke:#333,stroke-width:2px
-    style Game fill:#ffccbc,stroke:#333,stroke-width:2px
-    style SQLite fill:#fff9c4,stroke:#333,stroke-width:2px
+    style UI fill:#f4e8f7,stroke:#333,stroke-width:2px,color:#000
+    style REST fill:#e3f2fd,stroke:#333,stroke-width:2px,color:#000
+    style MCP fill:#e8f5e9,stroke:#333,stroke-width:2px,color:#000
+    style Game fill:#ffe0d1,stroke:#333,stroke-width:2px,color:#000
+    style SQLite fill:#fffde7,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ## Component Layers
@@ -75,16 +76,17 @@ graph TB
 The frontend is built with **Yew** (Rust's React-like framework) and compiled to **WebAssembly**:
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[Rust Source] -->|rustc| B[WASM Binary]
     B -->|wasm-bindgen| C[JS Glue Code]
     C --> D[Browser]
     D --> E[DOM Rendering]
 
-    style A fill:#ddd,color:#000
-    style B fill:#f9f,color:#000
-    style C fill:#bbf,color:#000
-    style E fill:#bfb,color:#000
+    style A fill:#f5f5f5,color:#000
+    style B fill:#fce4ec,color:#000
+    style C fill:#e3f2fd,color:#000
+    style E fill:#e8f5e9,color:#000
 ```
 
 **Key Characteristics:**
@@ -125,6 +127,7 @@ JSON-RPC interface providing structured tools:
 Core game engine implementing:
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TD
     A[Move Request] --> B{Valid Move?}
     B -->|No| C[Return Error]
@@ -139,9 +142,9 @@ graph TD
     I --> J[Persist State]
     J --> K[Return Game State]
 
-    style B fill:#ffe082,color:#000
-    style E fill:#ffe082,color:#000
-    style J fill:#a5d6a7,color:#000
+    style B fill:#fff9e6,color:#000
+    style E fill:#fff9e6,color:#000
+    style J fill:#e8f5e9,color:#000
 ```
 
 **Responsibilities:**
@@ -170,6 +173,7 @@ pub trait GameRepository {
 #### Database Schema
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 erDiagram
     GAMES ||--o{ MOVES : contains
     GAMES ||--o{ TAUNTS : contains
@@ -223,6 +227,7 @@ erDiagram
 ## Workspace Structure
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     subgraph "Cargo Workspace"
         Root[game-mcp-poc<br/>Workspace Root]
@@ -263,10 +268,10 @@ graph TB
     Lib --> Comp
     Lib --> Svc
 
-    style Root fill:#e1bee7,color:#000
-    style Backend fill:#bbdefb,color:#000
-    style Frontend fill:#c8e6c9,color:#000
-    style Shared fill:#ffccbc,color:#000
+    style Root fill:#f4e8f7,color:#000
+    style Backend fill:#e3f2fd,color:#000
+    style Frontend fill:#e8f5e9,color:#000
+    style Shared fill:#ffe0d1,color:#000
 ```
 
 ## Shared Type System
@@ -309,6 +314,7 @@ pub struct Move {
 ## Deployment Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     subgraph "Production Deployment"
         Server[Backend Binary<br/>Port 7397]
@@ -333,9 +339,9 @@ graph TB
     Agent[AI Agent] -->|MCP| MCPEndpoint
     Static -.serves.-> WASMFiles
 
-    style Server fill:#bbdefb,color:#000
-    style BinExe fill:#a5d6a7,color:#000
-    style WASMFiles fill:#fff9c4,color:#000
+    style Server fill:#e3f2fd,color:#000
+    style BinExe fill:#e8f5e9,color:#000
+    style WASMFiles fill:#fffde7,color:#000
 ```
 
 **Deployment Steps:**

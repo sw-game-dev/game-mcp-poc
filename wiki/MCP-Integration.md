@@ -11,6 +11,7 @@ The TTTTT server supports **dual MCP transports**:
 - **Stdio transport**: Binary for Claude Desktop integration
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[AI Agent<br/>OpenAI/Gemini/Claude] -->|HTTP POST /mcp| B[MCP Server<br/>Port 7397]
     B -->|Tool Calls| C[Game Logic]
@@ -19,10 +20,10 @@ graph LR
     C -->|Results| B
     B -->|JSON Response| A
 
-    style A fill:#c8e6c9,color:#000
-    style B fill:#bbdefb,color:#000
-    style C fill:#ffccbc,color:#000
-    style D fill:#fff9c4,color:#000
+    style A fill:#e8f5e9,color:#000
+    style B fill:#e3f2fd,color:#000
+    style C fill:#ffe0d1,color:#000
+    style D fill:#fffde7,color:#000
 ```
 
 ## Protocol Architecture
@@ -30,6 +31,7 @@ graph LR
 ### Connection Flow
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Agent as AI Agent
     participant MCP as MCP Server<br/>(HTTP /mcp)
@@ -466,6 +468,7 @@ async fn make_move(
 ### AI Agent Playing a Full Game
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 sequenceDiagram
     participant Agent as AI Agent
     participant MCP as MCP Server
@@ -515,6 +518,7 @@ sequenceDiagram
 ## Error Handling
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TD
     A[Tool Call] --> B{Valid JSON?}
     B -->|No| C[JSON Parse Error]
@@ -534,13 +538,13 @@ graph TD
     I --> M
     K --> M
 
-    style C fill:#ffcdd2,color:#000
-    style E fill:#ffcdd2,color:#000
-    style G fill:#ffcdd2,color:#000
-    style I fill:#ffcdd2,color:#000
-    style K fill:#ffcdd2,color:#000
-    style L fill:#c8e6c9,color:#000
-    style M fill:#ffccbc,color:#000
+    style C fill:#ffebee,color:#000
+    style E fill:#ffebee,color:#000
+    style G fill:#ffebee,color:#000
+    style I fill:#ffebee,color:#000
+    style K fill:#ffebee,color:#000
+    style L fill:#e8f5e9,color:#000
+    style M fill:#ffe0d1,color:#000
 ```
 
 **Error Response Format:**

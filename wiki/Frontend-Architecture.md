@@ -5,6 +5,7 @@ The frontend is a single-page application built with **Yew**, a modern Rust fram
 ## Technology Stack
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[Rust Code] -->|rustc| B[WASM Module]
     A -->|CSS| C[Stylesheets]
@@ -14,11 +15,11 @@ graph LR
     E --> G[HTML5 Canvas/DOM]
     F --> G
 
-    style A fill:#ddd,color:#000
-    style B fill:#f9f,color:#000
-    style C fill:#bbf,color:#000
-    style D fill:#bfb,color:#000
-    style G fill:#ffe082,color:#000
+    style A fill:#f5f5f5,color:#000
+    style B fill:#fce4ec,color:#000
+    style C fill:#e3f2fd,color:#000
+    style D fill:#e8f5e9,color:#000
+    style G fill:#fff9e6,color:#000
 ```
 
 | Component | Technology | Purpose |
@@ -80,6 +81,7 @@ pub fn main() {
 ## Component Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     App[App Component<br/>Root]
 
@@ -101,11 +103,11 @@ graph TB
 
     LogPanel --> LogScroll[Scrollable List<br/>Recent Events]
 
-    style App fill:#e1bee7,color:#000
-    style Board fill:#bbdefb,color:#000
-    style Status fill:#c8e6c9,color:#000
-    style Controls fill:#ffccbc,color:#000
-    style LogPanel fill:#fff9c4,color:#000
+    style App fill:#f4e8f7,color:#000
+    style Board fill:#e3f2fd,color:#000
+    style Status fill:#e8f5e9,color:#000
+    style Controls fill:#ffe0d1,color:#000
+    style LogPanel fill:#fffde7,color:#000
 ```
 
 ### App Component (Root)
@@ -247,6 +249,7 @@ pub fn board(props: &BoardProps) -> Html {
 
 **State Management:**
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[User Click] --> B[Cell Component]
     B --> C[on_cell_click Callback]
@@ -256,10 +259,10 @@ graph LR
     F --> G[Re-render]
     G --> B
 
-    style A fill:#ffe082,color:#000
-    style D fill:#bbdefb,color:#000
-    style E fill:#ffccbc,color:#000
-    style G fill:#c8e6c9,color:#000
+    style A fill:#fff9e6,color:#000
+    style D fill:#e3f2fd,color:#000
+    style E fill:#ffe0d1,color:#000
+    style G fill:#e8f5e9,color:#000
 ```
 
 ### Status Component
@@ -455,6 +458,7 @@ CSS Grid layout for the board:
 ## Build Process
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Rust Source<br/>frontend/src/] --> B[rustc]
     B --> C[WASM Binary<br/>.wasm]
@@ -470,9 +474,9 @@ graph TB
 
     H --> J[dist/<br/>Bundled Output]
 
-    style C fill:#f9f,color:#000
-    style E fill:#bbf,color:#000
-    style J fill:#c8e6c9,color:#000
+    style C fill:#fce4ec,color:#000
+    style E fill:#e3f2fd,color:#000
+    style J fill:#e8f5e9,color:#000
 ```
 
 **Build Commands:**
@@ -533,6 +537,7 @@ wasm-pack test --headless --firefox
 ## Logging Strategy
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Frontend Events] --> B{Log Level}
     B -->|Error| C[log::error!]
@@ -550,11 +555,11 @@ graph TB
     A --> I[UI Log Panel]
     I --> J[Scrollable Footer]
 
-    style C fill:#ffcdd2,color:#000
-    style D fill:#ffccbc,color:#000
-    style E fill:#bbdefb,color:#000
+    style C fill:#ffebee,color:#000
+    style D fill:#ffe0d1,color:#000
+    style E fill:#e3f2fd,color:#000
     style F fill:#e0e0e0,color:#000
-    style J fill:#fff9c4,color:#000
+    style J fill:#fffde7,color:#000
 ```
 
 **Logged Events:**

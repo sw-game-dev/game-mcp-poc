@@ -11,6 +11,7 @@ The system supports **dual MCP transports**: HTTP (port 7397) and stdio (binary 
 ## Module Structure
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     subgraph "backend/src/"
         Main[main.rs<br/>Entry Point<br/>Server Setup]
@@ -50,16 +51,16 @@ graph TB
         Main --> Tools
     end
 
-    style Main fill:#e1bee7,color:#000
-    style Board fill:#bbdefb,color:#000
-    style Logic fill:#bbdefb,color:#000
-    style Player fill:#bbdefb,color:#000
-    style Schema fill:#c8e6c9,color:#000
-    style Repo fill:#c8e6c9,color:#000
-    style Routes fill:#ffccbc,color:#000
-    style Handlers fill:#ffccbc,color:#000
-    style Server fill:#fff9c4,color:#000
-    style Tools fill:#fff9c4,color:#000
+    style Main fill:#f4e8f7,color:#000
+    style Board fill:#e3f2fd,color:#000
+    style Logic fill:#e3f2fd,color:#000
+    style Player fill:#e3f2fd,color:#000
+    style Schema fill:#e8f5e9,color:#000
+    style Repo fill:#e8f5e9,color:#000
+    style Routes fill:#ffe0d1,color:#000
+    style Handlers fill:#ffe0d1,color:#000
+    style Server fill:#fffde7,color:#000
+    style Tools fill:#fffde7,color:#000
 ```
 
 ## Core Components
@@ -124,6 +125,7 @@ async fn main() {
 #### `board.rs` - Board State Management
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 classDiagram
     class Cell {
         <<enumeration>>
@@ -153,6 +155,7 @@ classDiagram
 #### `logic.rs` - Game Rules Engine
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TD
     A[Move Request] --> B{In Bounds?}
     B -->|No| C[OutOfBounds Error]
@@ -172,11 +175,11 @@ graph TD
     N --> O
     O --> P[Return Updated State]
 
-    style C fill:#ffcdd2,color:#000
-    style E fill:#ffcdd2,color:#000
-    style G fill:#ffcdd2,color:#000
-    style K fill:#c8e6c9,color:#000
-    style M fill:#fff9c4,color:#000
+    style C fill:#ffebee,color:#000
+    style E fill:#ffebee,color:#000
+    style G fill:#ffebee,color:#000
+    style K fill:#e8f5e9,color:#000
+    style M fill:#fffde7,color:#000
 ```
 
 **Core Functions:**
@@ -403,6 +406,7 @@ pub async fn make_move(
 **Error Handling:**
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph LR
     A[Request] --> B[Handler]
     B --> C{Result}
@@ -412,10 +416,10 @@ graph LR
     E -->|NotFound| G[404 Not Found]
     E -->|DbError| H[500 Internal Error]
 
-    style D fill:#c8e6c9,color:#000
-    style F fill:#ffccbc,color:#000
-    style G fill:#ffccbc,color:#000
-    style H fill:#ffcdd2,color:#000
+    style D fill:#e8f5e9,color:#000
+    style F fill:#ffe0d1,color:#000
+    style G fill:#ffe0d1,color:#000
+    style H fill:#ffebee,color:#000
 ```
 
 ### 5. MCP Module
@@ -487,6 +491,7 @@ See [[MCP Integration]] for detailed tool documentation.
 ## Logging Strategy
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Backend Events] --> B{Log Level}
     B -->|Error| C[tracing::error!]
@@ -502,9 +507,9 @@ graph TB
     G --> H[Console/Terminal]
     G --> I[Log File Optional]
 
-    style C fill:#ffcdd2,color:#000
-    style D fill:#ffccbc,color:#000
-    style E fill:#bbdefb,color:#000
+    style C fill:#ffebee,color:#000
+    style D fill:#ffe0d1,color:#000
+    style E fill:#e3f2fd,color:#000
     style F fill:#e0e0e0,color:#000
 ```
 

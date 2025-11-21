@@ -97,6 +97,7 @@ All diagrams use Mermaid syntax. GitHub automatically renders them.
 **Important:** Do NOT use HTML break elements (`<br>`) inside Mermaid diagrams. Use `<br/>` in labels only when necessary:
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     A[Component Name<br/>Description] --> B[Another<br/>Component]
 ```

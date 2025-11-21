@@ -29,6 +29,7 @@ This project demonstrates a **production-ready** dual-interface tic-tac-toe game
 ## System Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#f5f5f5','primaryTextColor':'#000','primaryBorderColor':'#333','lineColor':'#333','secondaryColor':'#f5f5f5','tertiaryColor':'#f5f5f5'}}}%%
 graph TB
     subgraph "Client Layer"
         Browser[Web Browser]
@@ -53,9 +54,9 @@ graph TB
     MCP --> Logic
     Logic --> DB
 
-    style WASM fill:#f9f,stroke:#333,stroke-width:2px
-    style REST fill:#bbf,stroke:#333,stroke-width:2px
-    style MCP fill:#bfb,stroke:#333,stroke-width:2px
+    style WASM fill:#fce4ec,stroke:#333,stroke-width:2px
+    style REST fill:#e3f2fd,stroke:#333,stroke-width:2px
+    style MCP fill:#e8f5e9,stroke:#333,stroke-width:2px
     style Logic fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
