@@ -23,7 +23,7 @@ Starts both backend and frontend development servers with hot-reload.
 ./scripts/dev.sh
 ```
 
-- Backend: http://localhost:3000 (REST API + static files)
+- Backend: http://localhost:7397 (REST API + static files)
 - Frontend: http://localhost:8080 (Trunk dev server with hot-reload)
 - Uses in-memory database for development
 
@@ -34,7 +34,7 @@ Runs the production build (backend serving static frontend).
 ./scripts/serve.sh
 ```
 
-Serves the complete application at http://localhost:3000.
+Serves the complete application at http://localhost:7397.
 
 ## AI Agent Scripts
 

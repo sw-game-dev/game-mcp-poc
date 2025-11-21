@@ -186,7 +186,7 @@ You can test the MCP server directly with curl:
 ### Initialize
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}' \
   | jq
@@ -195,7 +195,7 @@ curl -X POST http://localhost:3000/mcp \
 ### List Available Tools
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}' \
   | jq
@@ -204,7 +204,7 @@ curl -X POST http://localhost:3000/mcp \
 ### View Game State
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"view_game_state","params":{},"id":3}' \
   | jq
@@ -213,7 +213,7 @@ curl -X POST http://localhost:3000/mcp \
 ### Make a Move
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"make_move","params":{"row":1,"col":1},"id":4}' \
   | jq
@@ -222,7 +222,7 @@ curl -X POST http://localhost:3000/mcp \
 ### Send a Taunt
 
 ```bash
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"taunt_player","params":{"message":"Nice try!"},"id":5}' \
   | jq

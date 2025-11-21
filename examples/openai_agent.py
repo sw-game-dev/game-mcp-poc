@@ -13,7 +13,7 @@ import json
 import os
 
 # MCP server endpoint
-MCP_URL = "http://localhost:3000/mcp"
+MCP_URL = "http://localhost:7397/mcp"
 
 def call_mcp_tool(method, params=None):
     """Call an MCP tool via HTTP."""

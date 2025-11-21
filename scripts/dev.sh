@@ -40,7 +40,7 @@ trap cleanup INT TERM
 
 echo ""
 echo "Development servers running:"
-echo "  Backend:  http://localhost:3000"
+echo "  Backend:  http://localhost:7397"
 echo "  Frontend: http://localhost:8080"
 echo ""
 echo "Press CTRL+C to stop all servers"
