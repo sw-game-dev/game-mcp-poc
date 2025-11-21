@@ -21,7 +21,7 @@ To run the project in development mode with hot-reloading:
 ```
 
 This script will:
-1.  Start the backend server at `http://localhost:3000`.
+1.  Start the backend server at `http://localhost:7397`.
 2.  Start the frontend development server with `trunk` at `http://localhost:8080` and open it in your browser.
 
 ### Production

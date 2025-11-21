@@ -18,13 +18,13 @@ This project demonstrates a **production-ready** dual-interface tic-tac-toe game
 - [[Data Flow]] - Request flows and sequence diagrams
 
 **Repository Documentation:**
-- [Product Requirements (PRD)](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/prd.md)
-- [Detailed Design Specification](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/design.md)
-- [Development Process & TDD Guide](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/process.md)
-- [Project Status](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/status.md)
-- [AI Agent Examples](https://github.com/softwarewrighter/game-mcp-poc/blob/main/examples/README.md)
-- [Online Deployment Plan](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/online-plan.md)
-- [Claude AI Instructions](https://github.com/softwarewrighter/game-mcp-poc/blob/main/CLAUDE.md)
+- [Product Requirements (PRD)](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/prd.md)
+- [Detailed Design Specification](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/design.md)
+- [Development Process & TDD Guide](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/process.md)
+- [Project Status](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/status.md)
+- [AI Agent Examples](https://github.com/sw-game-dev/game-mcp-poc/blob/main/examples/README.md)
+- [Online Deployment Plan](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/online-plan.md)
+- [Claude AI Instructions](https://github.com/sw-game-dev/game-mcp-poc/blob/main/CLAUDE.md)
 
 ## System Architecture
 

@@ -162,7 +162,7 @@ The **TTTTT (Trash Talkin' Tic Tac Toe) project is complete and production-ready
 ## Architecture Highlights
 
 ### Dual Server Architecture
-- **HTTP Server** (port 3000):
+- **HTTP Server** (port 7397):
   - REST API (`/api/*`)
   - MCP HTTP endpoint (`/mcp`)
   - SSE endpoint (`/sse`)

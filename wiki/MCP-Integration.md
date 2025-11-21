@@ -7,12 +7,12 @@ The Model Context Protocol (MCP) integration enables AI agents to interact with 
 **Model Context Protocol** is a standardized way for AI models to interact with external tools and services. It uses JSON-RPC 2.0 for communication and provides a schema-driven approach to tool discovery and invocation.
 
 The TTTTT server supports **dual MCP transports**:
-- **HTTP transport**: `/mcp` endpoint on port 3000 (for OpenAI, Gemini, custom agents)
+- **HTTP transport**: `/mcp` endpoint on port 7397 (for OpenAI, Gemini, custom agents)
 - **Stdio transport**: Binary for Claude Desktop integration
 
 ```mermaid
 graph LR
-    A[AI Agent<br/>OpenAI/Gemini/Claude] -->|HTTP POST /mcp| B[MCP Server<br/>Port 3000]
+    A[AI Agent<br/>OpenAI/Gemini/Claude] -->|HTTP POST /mcp| B[MCP Server<br/>Port 7397]
     B -->|Tool Calls| C[Game Logic]
     C -->|State Updates| D[(SQLite DB)]
     D -->|State| C
@@ -571,27 +571,27 @@ graph TD
 
 ```bash
 # Initialize protocol
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}' | jq
 
 # List available tools
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}' | jq
 
 # View game state
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"view_game_state","params":{},"id":3}' | jq
 
 # Make a move
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"make_move","params":{"row":1,"col":1},"id":4}' | jq
 
 # Send a taunt
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"taunt_player","params":{"message":"Nice try!"},"id":5}' | jq
 ```
@@ -603,7 +603,7 @@ See the `examples/` directory for working integrations:
 - **Google Gemini**: `examples/gemini_agent.py`
 - **Claude Desktop**: `examples/claude-desktop-config.json`
 
-Complete setup guide: [examples/README.md](https://github.com/softwarewrighter/game-mcp-poc/blob/main/examples/README.md)
+Complete setup guide: [examples/README.md](https://github.com/sw-game-dev/game-mcp-poc/blob/main/examples/README.md)
 
 ### Integration Tests
 
@@ -685,13 +685,13 @@ MCP server configuration (environment variables):
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `3000` | HTTP server port (REST + MCP) |
+| `PORT` | `7397` | HTTP server port (REST + MCP) |
 | `GAME_DB_PATH` | `game.db` | SQLite database file path |
 | `RUST_LOG` | `info` | Log level (error/warn/info/debug/trace) |
 
 ### Dual Transport Support
 
-**HTTP Transport** (port 3000):
+**HTTP Transport** (port 7397):
 - Endpoint: `POST /mcp`
 - Content-Type: `application/json`
 - Used by: OpenAI, Gemini, custom HTTP agents
@@ -712,4 +712,4 @@ MCP server configuration (environment variables):
 
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/)
 - [MCP Implementation Guide](https://github.com/anthropics/mcp)
-- [Backend MCP Source Code](https://github.com/softwarewrighter/game-mcp-poc/tree/main/backend/src/mcp)
+- [Backend MCP Source Code](https://github.com/sw-game-dev/game-mcp-poc/tree/main/backend/src/mcp)

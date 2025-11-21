@@ -20,7 +20,7 @@ GitHub Wiki is a separate git repository. Follow these steps to deploy:
 
 ```bash
 # Clone the wiki repository (separate from main repo)
-git clone https://github.com/softwarewrighter/game-mcp-poc.wiki.git
+git clone https://github.com/sw-game-dev/game-mcp-poc.wiki.git
 
 cd game-mcp-poc.wiki
 ```
@@ -62,7 +62,7 @@ git push origin master
 
 ### 4. Verify Deployment
 
-Visit: https://github.com/softwarewrighter/game-mcp-poc/wiki
+Visit: https://github.com/sw-game-dev/game-mcp-poc/wiki
 
 ## Link Formats
 
@@ -78,7 +78,7 @@ The wiki uses specific link formats:
 ### Wiki Page to Repository File
 
 ```markdown
-[Link Text](https://github.com/softwarewrighter/game-mcp-poc/blob/main/path/to/file.md)
+[Link Text](https://github.com/sw-game-dev/game-mcp-poc/blob/main/path/to/file.md)
 ```
 
 ### Sidebar Links

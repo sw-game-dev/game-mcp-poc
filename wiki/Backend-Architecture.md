@@ -6,7 +6,7 @@ The backend is a Rust-based server that provides four key functions:
 3. Server-Sent Events (SSE) for real-time updates
 4. Static file serving for the WASM frontend
 
-The system supports **dual MCP transports**: HTTP (port 3000) and stdio (binary for Claude Desktop).
+The system supports **dual MCP transports**: HTTP (port 7397) and stdio (binary for Claude Desktop).
 
 ## Module Structure
 
@@ -114,7 +114,7 @@ async fn main() {
 - Handle graceful shutdown
 
 **Key Updates:**
-- Single HTTP server on port 3000 handles all traffic
+- Single HTTP server on port 7397 handles all traffic
 - SSE for real-time updates to frontend
 - MCP HTTP endpoint at `/mcp` for AI agents
 - Separate stdio MCP binary for Claude Desktop
@@ -522,11 +522,11 @@ Environment variables:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `GAME_DB_PATH` | `game.db` | SQLite database file path |
-| `PORT` | `3000` | HTTP server port (REST + MCP + SSE) |
+| `PORT` | `7397` | HTTP server port (REST + MCP + SSE) |
 | `RUST_LOG` | `info` | Log level (error/warn/info/debug/trace) |
 
 **Dual MCP Transport:**
-- **HTTP**: `POST /mcp` on port 3000 (for OpenAI, Gemini, HTTP agents)
+- **HTTP**: `POST /mcp` on port 7397 (for OpenAI, Gemini, HTTP agents)
 - **Stdio**: `./target/release/game-mcp-server` binary (for Claude Desktop)
 
 ## Testing Strategy
@@ -575,5 +575,5 @@ mod tests {
 
 ## Further Reading
 
-- [Detailed Design Specification](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/design.md)
-- [Backend Source Code](https://github.com/softwarewrighter/game-mcp-poc/tree/main/backend/src)
+- [Detailed Design Specification](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/design.md)
+- [Backend Source Code](https://github.com/sw-game-dev/game-mcp-poc/tree/main/backend/src)

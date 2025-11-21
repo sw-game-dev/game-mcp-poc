@@ -7,7 +7,11 @@ A Proof of Concept game that provides an MCP server for AI Agent to play the gam
 ```bash
 ./scripts/dev.sh
 ```
-This will start both the backend server (http://localhost:3000) and the frontend dev server (http://localhost:8080) with hot-reloading.
+This will start the backend server (http://localhost:7397) which serves:
+- REST API endpoints for UI interactions
+- MCP HTTP endpoint for AI agents
+- SSE endpoint for real-time updates
+- Static frontend files (Yew/WASM)
 
 ### Build for Production
 ```bash

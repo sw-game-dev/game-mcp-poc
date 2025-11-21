@@ -18,9 +18,13 @@ The game randomly assigns X/O, persists state to SQLite (including taunts), and 
 ```bash
 ./scripts/dev.sh
 ```
-Starts both servers with hot-reload:
-- Backend: http://localhost:3000 (REST API + MCP server + SSE)
-- Frontend: http://localhost:8080 (Yew/WASM dev server)
+Starts the backend server with hot-reload on http://localhost:7397. The server provides:
+- REST API endpoints (`/api/*`)
+- MCP HTTP endpoint (`/mcp`)
+- SSE endpoint (`/api/events`)
+- Static files for Yew/WASM frontend
+
+During development, Trunk may run a dev server on port 8080 for faster WASM rebuilds, but this is temporary and only for development convenience.
 
 ### Build Production
 ```bash
@@ -102,15 +106,16 @@ game-mcp-poc/
 
 ### Critical Architecture Details
 
-**Dual Server Architecture:**
-- **HTTP Server** (`backend/src/main.rs`): Axum server on port 3000
-  - Serves REST API (`/api/*`)
-  - Serves MCP HTTP endpoint (`/mcp`)
-  - Serves SSE endpoint (`/sse`)
+**Single Server Architecture:**
+- **HTTP Server** (`backend/src/main.rs`): Single Axum server on port 7397
+  - Serves REST API endpoints (`/api/*`) for UI interactions
+  - Serves MCP HTTP endpoint (`/mcp`) for AI agent tool calls
+  - Serves SSE endpoint (`/api/events`) for real-time browser updates
   - Serves static frontend files from `frontend/dist`
-- **Stdio MCP Server** (`backend/src/bin/game-mcp-server.rs`): Binary for Claude Desktop
+- **Stdio MCP Binary** (`backend/src/bin/game-mcp-server.rs`): Separate binary for Claude Desktop
   - Reads JSON-RPC from stdin, writes to stdout
   - Used by Claude Desktop via stdio transport
+  - Shares same game state via SQLite database
 
 **Shared Game State:**
 - `GameManager` coordinates all game operations
@@ -150,7 +155,7 @@ The frontend uses `[lib]` in Cargo.toml, not `[bin]`. The `main()` function in `
 - `get_game_history`: View past moves
 
 **SSE (Server-Sent Events):**
-- Endpoint: `/sse`
+- Endpoint: `/api/events`
 - Events: `game-update`, `taunt`, `mcp-activity-start`, `mcp-activity-end`
 - Frontend subscribes on mount, updates UI in real-time
 - Broadcast channel capacity: 100 events
@@ -162,14 +167,15 @@ The frontend uses `[lib]` in Cargo.toml, not `[bin]`. The `main()` function in `
 └─────────────────┘               │
                                   │
 ┌─────────────────┐               ▼
-│ AI Agent (HTTP) │◄──MCP HTTP───┐
-└─────────────────┘               │
-                                  │     ┌──────────┐
-┌─────────────────┐               ├────►│ Backend  │◄───►│ SQLite │
-│ Claude Desktop  │◄──MCP stdio───┤     │ (Axum)   │     │ game.db│
-│ (stdio)         │               │     └──────────┘     └────────┘
-└─────────────────┘               │
-                                  │
+│ AI Agent (HTTP) │◄──MCP HTTP───┤
+└─────────────────┘               │     ┌────────────────────┐
+                                  ├────►│ Single HTTP Server │◄───►│ SQLite │
+┌─────────────────┐               │     │   (Port 7397)      │     │ game.db│
+│ Claude Desktop  │◄──MCP stdio───┤     │  - REST API        │     └────────┘
+│ (stdio binary)  │               │     │  - MCP endpoints   │
+└─────────────────┘               │     │  - SSE             │
+                                  │     │  - Static files    │
+                                  │     └────────────────────┘
                             GameManager
                           (coordinates all)
 ```
@@ -263,17 +269,17 @@ See `examples/README.md` for complete setup instructions.
 ### Testing MCP Endpoints
 ```bash
 # Initialize
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"initialize","params":{},"id":1}' | jq
 
 # List tools
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}' | jq
 
 # View game state
-curl -X POST http://localhost:3000/mcp \
+curl -X POST http://localhost:7397/mcp \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"view_game_state","params":{},"id":3}' | jq
 ```
@@ -283,7 +289,7 @@ curl -X POST http://localhost:3000/mcp \
 1. **Frontend not rendering**: Ensure `main()` in `frontend/src/lib.rs` has `#[wasm_bindgen(start)]` annotation
 2. **Clippy warnings on WASM tests**: Annotate test code with `#[cfg(test)]` and `#[wasm_bindgen_test]`
 3. **Database conflicts**: SQLite WAL mode creates `.db-shm` and `.db-wal` files - this is normal
-4. **Port conflicts**: Backend uses 3000, frontend dev server uses 8080 - ensure these are free
+4. **Port conflicts**: Backend server uses port 7397 - ensure it's available
 5. **MCP thinking indicator not showing**: Activity tracking happens in HTTP handler, not individual tools
 6. **Cross-process game state**: Database stores current game ID; both HTTP and stdio servers share state via DB
-7. **SSE not updating**: Check CORS settings and ensure SSE endpoint is accessible from frontend dev server
+7. **SSE not updating**: Check browser console for connection errors at `/api/events` endpoint

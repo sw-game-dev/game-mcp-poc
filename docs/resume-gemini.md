@@ -3,7 +3,7 @@
 ## Current Status
 
 *   **Playwright and Firefox Installation**: Successfully installed Playwright Python library via `uv pip install playwright` and Firefox browser via `playwright install firefox`.
-*   **Development Server Issues**: Encountered persistent `NS_ERROR_CONNECTION_REFUSED` when attempting to access the frontend served by `trunk serve` at `http://localhost:8080`.
+*   **Development Server Issues**: Encountered persistent `NS_ERROR_CONNECTION_REFUSED` when attempting to access the frontend. The server runs on port 7397 and serves all endpoints (API, MCP, SSE) and static files from a single server.
 *   **`dev.sh` Modification**: Modified `scripts/dev.sh` to remove the `--open` flag from `trunk serve` to prevent automatic browser launching.
 *   **Unexpected Browser Launch**: Despite modifications, a Chrome tab was still observed opening by the user when running `dev.sh`, indicating a deeper issue or misunderstanding of the interaction.
 *   **SSE Connection Error**: User reported an SSE connection error when browsing, suggesting the frontend is not fully functional even when the server appears to start quickly.

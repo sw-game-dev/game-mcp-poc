@@ -23,7 +23,7 @@ This document outlines a plan for deploying the TTTTT (Trash Talkin' Tic-Tac-Toe
                     ┌──────────▼──────────────┐
                     │   Backend Server        │
                     │   (Rust/Axum)           │
-                    │   - Port 3000           │
+                    │   - Port 7397           │
                     │   - /mcp endpoint       │
                     │   - /api/* REST         │
                     │   - /sse events         │
@@ -127,7 +127,7 @@ Create a multi-stage Docker build:
 - Use rust:1.83-slim as builder
 - Copy only necessary files to runtime
 - Set GAME_DB_PATH to persistent volume
-- Expose port 3000
+- Expose port 7397
 
 #### 1.2 Add Health Check Endpoint
 Add `/health` endpoint to backend:
@@ -137,7 +137,7 @@ Add `/health` endpoint to backend:
 #### 1.3 Environment Configuration
 Create `.env.example`:
 ```
-PORT=3000
+PORT=7397
 GAME_DB_PATH=/data/game.db
 RUST_LOG=info
 CORS_ORIGIN=https://ttttt.yourdomain.com

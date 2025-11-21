@@ -346,7 +346,7 @@ pub struct ApiClient {
 impl ApiClient {
     pub fn new() -> Self {
         Self {
-            base_url: "http://localhost:3000/api".to_string(),
+            base_url: "http://localhost:7397/api".to_string(),
         }
     }
 
@@ -635,4 +635,4 @@ let app = Router::new()
 
 - [Yew Documentation](https://yew.rs/)
 - [wasm-bindgen Guide](https://rustwasm.github.io/wasm-bindgen/)
-- [Frontend Source Code](https://github.com/softwarewrighter/game-mcp-poc/tree/main/frontend/src)
+- [Frontend Source Code](https://github.com/sw-game-dev/game-mcp-poc/tree/main/frontend/src)

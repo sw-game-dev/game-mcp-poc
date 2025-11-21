@@ -21,8 +21,8 @@ graph TB
     end
 
     subgraph "Transport Layer"
-        REST[HTTP/REST<br/>Port 3000]
-        MCP[JSON-RPC/MCP<br/>Port 3001]
+        REST[HTTP/REST<br/>Port 7397]
+        MCP[JSON-RPC/MCP<br/>Port 7397]
     end
 
     subgraph "Application Layer"
@@ -599,6 +599,6 @@ graph TB
 
 ## Further Reading
 
-- [Detailed Design Document](https://github.com/softwarewrighter/game-mcp-poc/blob/main/docs/design.md)
-- [API Handlers Source](https://github.com/softwarewrighter/game-mcp-poc/tree/main/backend/src/api)
-- [MCP Tools Source](https://github.com/softwarewrighter/game-mcp-poc/tree/main/backend/src/mcp)
+- [Detailed Design Document](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/design.md)
+- [API Handlers Source](https://github.com/sw-game-dev/game-mcp-poc/tree/main/backend/src/api)
+- [MCP Tools Source](https://github.com/sw-game-dev/game-mcp-poc/tree/main/backend/src/mcp)

@@ -311,7 +311,7 @@ pub struct Move {
 ```mermaid
 graph TB
     subgraph "Production Deployment"
-        Server[Backend Binary<br/>Port 3000]
+        Server[Backend Binary<br/>Port 7397]
         Static[Static File Handler<br/>Serves WASM + HTML]
         MCPEndpoint[MCP Endpoint<br/>/mcp]
         APIEndpoint[REST Endpoints<br/>/api/*]
@@ -329,7 +329,7 @@ graph TB
     BinExe --> Server
     WASMFiles --> Static
 
-    Client[Web Browser] -->|HTTP :3000| Static
+    Client[Web Browser] -->|HTTP :7397| Static
     Agent[AI Agent] -->|MCP| MCPEndpoint
     Static -.serves.-> WASMFiles
 
