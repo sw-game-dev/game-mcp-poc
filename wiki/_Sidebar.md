@@ -10,10 +10,12 @@
 - [[MCP Integration]]
 - [[Data Flow]]
 
+### Development
+- [[Development Process]]
+
 ### Repository Docs
 - [PRD](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/prd.md)
 - [Design](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/design.md)
-- [Process](https://github.com/sw-game-dev/game-mcp-poc/blob/main/docs/process.md)
 - [CLAUDE.md](https://github.com/sw-game-dev/game-mcp-poc/blob/main/CLAUDE.md)
 
 ### Quick Links
