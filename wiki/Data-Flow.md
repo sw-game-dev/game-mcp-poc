@@ -52,10 +52,10 @@ graph TB
     Logic <--> Repo
     Repo <--> DB
 
-    style Browser fill:#e1bee7
-    style Agent fill:#c8e6c9
-    style Logic fill:#ffccbc
-    style DB fill:#fff9c4
+    style Browser fill:#e1bee7,color:#000
+    style Agent fill:#c8e6c9,color:#000
+    style Logic fill:#ffccbc,color:#000
+    style DB fill:#fff9c4,color:#000
 ```
 
 ## Human Player Flows
@@ -382,11 +382,11 @@ graph TB
     H --> J[UI Re-renders]
     I --> K[AI Makes Decision]
 
-    style A fill:#ffe082
-    style F fill:#ffccbc
-    style G fill:#fff9c4
-    style J fill:#c8e6c9
-    style K fill:#bbdefb
+    style A fill:#ffe082,color:#000
+    style F fill:#ffccbc,color:#000
+    style G fill:#fff9c4,color:#000
+    style J fill:#c8e6c9,color:#000
+    style K fill:#bbdefb,color:#000
 ```
 
 ## Data Models
@@ -455,9 +455,9 @@ graph LR
 
     A -->|UPDATE| J[(games table)]
 
-    style A fill:#e1bee7
-    style B fill:#bbdefb
-    style D fill:#fff9c4
+    style A fill:#e1bee7,color:#000
+    style B fill:#bbdefb,color:#000
+    style D fill:#fff9c4,color:#000
 ```
 
 ## Error Propagation
@@ -485,13 +485,13 @@ graph TD
     J --> L[Display to User]
     K --> M[Retry or Fallback Strategy]
 
-    style A fill:#ffcdd2
-    style C fill:#ffccbc
-    style D fill:#ffccbc
-    style E fill:#ffccbc
-    style F fill:#ffccbc
-    style L fill:#ffe082
-    style M fill:#ffe082
+    style A fill:#ffcdd2,color:#000
+    style C fill:#ffccbc,color:#000
+    style D fill:#ffccbc,color:#000
+    style E fill:#ffccbc,color:#000
+    style F fill:#ffccbc,color:#000
+    style L fill:#ffe082,color:#000
+    style M fill:#ffe082,color:#000
 ```
 
 **Error Mapping Table:**
@@ -522,9 +522,9 @@ graph TB
     H[State Mutation] --> I[Invalidate Cache]
     I --> D
 
-    style C fill:#c8e6c9
-    style D fill:#fff9c4
-    style I fill:#ffccbc
+    style C fill:#c8e6c9,color:#000
+    style D fill:#fff9c4,color:#000
+    style I fill:#ffccbc,color:#000
 ```
 
 **Current Implementation:** No caching (simplicity)
@@ -549,8 +549,8 @@ graph LR
     H --> I[Concurrent Reads]
     H --> J[Serialized Writes]
 
-    style B fill:#bbdefb
-    style H fill:#fff9c4
+    style B fill:#bbdefb,color:#000
+    style H fill:#fff9c4,color:#000
 ```
 
 **SQLite WAL Mode Benefits:**
@@ -577,9 +577,9 @@ graph TB
     F --> J[Server Logs]
     H --> K[Player Visibility]
 
-    style C fill:#e1bee7
-    style D fill:#bbdefb
-    style H fill:#c8e6c9
+    style C fill:#e1bee7,color:#000
+    style D fill:#bbdefb,color:#000
+    style H fill:#c8e6c9,color:#000
 ```
 
 **Log Levels:**

@@ -50,16 +50,16 @@ graph TB
         Main --> Tools
     end
 
-    style Main fill:#e1bee7
-    style Board fill:#bbdefb
-    style Logic fill:#bbdefb
-    style Player fill:#bbdefb
-    style Schema fill:#c8e6c9
-    style Repo fill:#c8e6c9
-    style Routes fill:#ffccbc
-    style Handlers fill:#ffccbc
-    style Server fill:#fff9c4
-    style Tools fill:#fff9c4
+    style Main fill:#e1bee7,color:#000
+    style Board fill:#bbdefb,color:#000
+    style Logic fill:#bbdefb,color:#000
+    style Player fill:#bbdefb,color:#000
+    style Schema fill:#c8e6c9,color:#000
+    style Repo fill:#c8e6c9,color:#000
+    style Routes fill:#ffccbc,color:#000
+    style Handlers fill:#ffccbc,color:#000
+    style Server fill:#fff9c4,color:#000
+    style Tools fill:#fff9c4,color:#000
 ```
 
 ## Core Components
@@ -172,11 +172,11 @@ graph TD
     N --> O
     O --> P[Return Updated State]
 
-    style C fill:#ffcdd2
-    style E fill:#ffcdd2
-    style G fill:#ffcdd2
-    style K fill:#c8e6c9
-    style M fill:#fff9c4
+    style C fill:#ffcdd2,color:#000
+    style E fill:#ffcdd2,color:#000
+    style G fill:#ffcdd2,color:#000
+    style K fill:#c8e6c9,color:#000
+    style M fill:#fff9c4,color:#000
 ```
 
 **Core Functions:**
@@ -412,10 +412,10 @@ graph LR
     E -->|NotFound| G[404 Not Found]
     E -->|DbError| H[500 Internal Error]
 
-    style D fill:#c8e6c9
-    style F fill:#ffccbc
-    style G fill:#ffccbc
-    style H fill:#ffcdd2
+    style D fill:#c8e6c9,color:#000
+    style F fill:#ffccbc,color:#000
+    style G fill:#ffccbc,color:#000
+    style H fill:#ffcdd2,color:#000
 ```
 
 ### 5. MCP Module
@@ -502,10 +502,10 @@ graph TB
     G --> H[Console/Terminal]
     G --> I[Log File Optional]
 
-    style C fill:#ffcdd2
-    style D fill:#ffccbc
-    style E fill:#bbdefb
-    style F fill:#e0e0e0
+    style C fill:#ffcdd2,color:#000
+    style D fill:#ffccbc,color:#000
+    style E fill:#bbdefb,color:#000
+    style F fill:#e0e0e0,color:#000
 ```
 
 **Logged Events:**

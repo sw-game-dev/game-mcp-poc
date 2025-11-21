@@ -19,10 +19,10 @@ graph LR
     C -->|Results| B
     B -->|JSON Response| A
 
-    style A fill:#c8e6c9
-    style B fill:#bbdefb
-    style C fill:#ffccbc
-    style D fill:#fff9c4
+    style A fill:#c8e6c9,color:#000
+    style B fill:#bbdefb,color:#000
+    style C fill:#ffccbc,color:#000
+    style D fill:#fff9c4,color:#000
 ```
 
 ## Protocol Architecture
@@ -534,13 +534,13 @@ graph TD
     I --> M
     K --> M
 
-    style C fill:#ffcdd2
-    style E fill:#ffcdd2
-    style G fill:#ffcdd2
-    style I fill:#ffcdd2
-    style K fill:#ffcdd2
-    style L fill:#c8e6c9
-    style M fill:#ffccbc
+    style C fill:#ffcdd2,color:#000
+    style E fill:#ffcdd2,color:#000
+    style G fill:#ffcdd2,color:#000
+    style I fill:#ffcdd2,color:#000
+    style K fill:#ffcdd2,color:#000
+    style L fill:#c8e6c9,color:#000
+    style M fill:#ffccbc,color:#000
 ```
 
 **Error Response Format:**

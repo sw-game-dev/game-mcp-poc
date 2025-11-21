@@ -81,10 +81,10 @@ graph LR
     C --> D[Browser]
     D --> E[DOM Rendering]
 
-    style A fill:#ddd
-    style B fill:#f9f
-    style C fill:#bbf
-    style E fill:#bfb
+    style A fill:#ddd,color:#000
+    style B fill:#f9f,color:#000
+    style C fill:#bbf,color:#000
+    style E fill:#bfb,color:#000
 ```
 
 **Key Characteristics:**
@@ -139,9 +139,9 @@ graph TD
     I --> J[Persist State]
     J --> K[Return Game State]
 
-    style B fill:#ffe082
-    style E fill:#ffe082
-    style J fill:#a5d6a7
+    style B fill:#ffe082,color:#000
+    style E fill:#ffe082,color:#000
+    style J fill:#a5d6a7,color:#000
 ```
 
 **Responsibilities:**
@@ -263,10 +263,10 @@ graph TB
     Lib --> Comp
     Lib --> Svc
 
-    style Root fill:#e1bee7
-    style Backend fill:#bbdefb
-    style Frontend fill:#c8e6c9
-    style Shared fill:#ffccbc
+    style Root fill:#e1bee7,color:#000
+    style Backend fill:#bbdefb,color:#000
+    style Frontend fill:#c8e6c9,color:#000
+    style Shared fill:#ffccbc,color:#000
 ```
 
 ## Shared Type System
@@ -333,9 +333,9 @@ graph TB
     Agent[AI Agent] -->|MCP| MCPEndpoint
     Static -.serves.-> WASMFiles
 
-    style Server fill:#bbdefb
-    style BinExe fill:#a5d6a7
-    style WASMFiles fill:#fff9c4
+    style Server fill:#bbdefb,color:#000
+    style BinExe fill:#a5d6a7,color:#000
+    style WASMFiles fill:#fff9c4,color:#000
 ```
 
 **Deployment Steps:**

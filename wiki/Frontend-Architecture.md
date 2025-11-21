@@ -14,11 +14,11 @@ graph LR
     E --> G[HTML5 Canvas/DOM]
     F --> G
 
-    style A fill:#ddd
-    style B fill:#f9f
-    style C fill:#bbf
-    style D fill:#bfb
-    style G fill:#ffe082
+    style A fill:#ddd,color:#000
+    style B fill:#f9f,color:#000
+    style C fill:#bbf,color:#000
+    style D fill:#bfb,color:#000
+    style G fill:#ffe082,color:#000
 ```
 
 | Component | Technology | Purpose |
@@ -101,11 +101,11 @@ graph TB
 
     LogPanel --> LogScroll[Scrollable List<br/>Recent Events]
 
-    style App fill:#e1bee7
-    style Board fill:#bbdefb
-    style Status fill:#c8e6c9
-    style Controls fill:#ffccbc
-    style LogPanel fill:#fff9c4
+    style App fill:#e1bee7,color:#000
+    style Board fill:#bbdefb,color:#000
+    style Status fill:#c8e6c9,color:#000
+    style Controls fill:#ffccbc,color:#000
+    style LogPanel fill:#fff9c4,color:#000
 ```
 
 ### App Component (Root)
@@ -256,10 +256,10 @@ graph LR
     F --> G[Re-render]
     G --> B
 
-    style A fill:#ffe082
-    style D fill:#bbdefb
-    style E fill:#ffccbc
-    style G fill:#c8e6c9
+    style A fill:#ffe082,color:#000
+    style D fill:#bbdefb,color:#000
+    style E fill:#ffccbc,color:#000
+    style G fill:#c8e6c9,color:#000
 ```
 
 ### Status Component
@@ -470,9 +470,9 @@ graph TB
 
     H --> J[dist/<br/>Bundled Output]
 
-    style C fill:#f9f
-    style E fill:#bbf
-    style J fill:#c8e6c9
+    style C fill:#f9f,color:#000
+    style E fill:#bbf,color:#000
+    style J fill:#c8e6c9,color:#000
 ```
 
 **Build Commands:**
@@ -550,11 +550,11 @@ graph TB
     A --> I[UI Log Panel]
     I --> J[Scrollable Footer]
 
-    style C fill:#ffcdd2
-    style D fill:#ffccbc
-    style E fill:#bbdefb
-    style F fill:#e0e0e0
-    style J fill:#fff9c4
+    style C fill:#ffcdd2,color:#000
+    style D fill:#ffccbc,color:#000
+    style E fill:#bbdefb,color:#000
+    style F fill:#e0e0e0,color:#000
+    style J fill:#fff9c4,color:#000
 ```
 
 **Logged Events:**
