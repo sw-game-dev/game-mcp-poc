@@ -2,7 +2,7 @@
 
 A dual-interface tic-tac-toe game where **trash talk is part of the game!** Implements the **Model Context Protocol (MCP)** to enable AI agents like Claude Code to play AND taunt via a standardized tool interface.
 
-![Game Screenshot](./images/screenshot.png?ts=1763668633000)
+![Game Screenshot](./images/screenshot.png?ts=1763692127000)
 
 ## 🎯 Project Status: MCP Server Complete ✅
 
@@ -27,9 +27,11 @@ A dual-interface tic-tac-toe game where **trash talk is part of the game!** Impl
 ```bash
 ./scripts/dev.sh
 ```
-Starts both servers with hot-reload:
-- Backend API + MCP server: http://localhost:3000
-- Frontend dev server: http://localhost:8080
+Starts the backend server on http://localhost:7397 which serves:
+- REST API endpoints for UI interactions
+- MCP HTTP endpoint for AI agents
+- SSE endpoint for real-time updates
+- Static frontend files (Yew/WASM)
 
 ### Production Build
 ```bash
@@ -41,7 +43,7 @@ Builds optimized backend binary and frontend WASM assets.
 ```bash
 ./scripts/serve.sh
 ```
-Runs production server (serves both API and static frontend).
+Runs single production server on port 7397 serving all endpoints and static files.
 
 ## Testing
 

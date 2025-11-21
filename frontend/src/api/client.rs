@@ -3,7 +3,7 @@
 use gloo_net::http::Request;
 use shared::{GameState, MakeMoveRequest, TauntRequest};
 
-const API_BASE: &str = "http://localhost:3000/api";
+const API_BASE: &str = "/api";
 
 pub async fn fetch_game_state() -> Result<GameState, String> {
     let response = Request::get(&format!("{}/game", API_BASE))

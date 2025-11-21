@@ -309,6 +309,15 @@ button:disabled {
     animation: slideIn 0.3s ease-out;
 }
 
+.taunt-message.user-taunt {
+    background: #e6f2ff;
+    border-left: 4px solid #2563eb;
+    margin-left: auto;
+    margin-right: 0;
+    max-width: 80%;
+    text-align: right;
+}
+
 @keyframes slideIn {
     from {
         transform: translateX(-10px);

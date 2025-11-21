@@ -106,7 +106,7 @@ fn app() -> Html {
 
             // Set up SSE connection
             #[cfg(target_arch = "wasm32")]
-            let event_source_opt = EventSource::new("http://localhost:3000/api/events").ok();
+            let event_source_opt = EventSource::new("/api/events").ok();
 
             #[cfg(target_arch = "wasm32")]
             if let Some(ref event_source) = event_source_opt {
@@ -620,7 +620,7 @@ fn app() -> Html {
                     <h1>{"TTTTT"}</h1>
                     <span class="subtitle">{"Trash Talkin' Tic-Tac-Toe"}</span>
                 </div>
-                <a href="https://github.com/softwarewrighter/game-mcp-poc" target="_blank" class="github-link" title="Source code">
+                <a href="https://github.com/sw-game-dev/game-mcp-poc" target="_blank" class="github-link" title="Source code">
                     <div class="github-corner">
                         <svg width="60" height="60" viewBox="0 0 250 250" style="fill:#667eea; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
                             <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
@@ -677,11 +677,15 @@ fn app() -> Html {
                                             None => ("Unknown: ", "taunt-label"),
                                         };
 
-                                        // Add blink animation only to the latest taunt
-                                        let class = if idx == taunt_count - 1 {
-                                            "taunt-message latest-taunt"
-                                        } else {
-                                            "taunt-message"
+                                        // Build class string with user-taunt for UI messages
+                                        let is_user = matches!(&taunt.source, Some(MoveSource::UI));
+                                        let is_latest = idx == taunt_count - 1;
+
+                                        let class = match (is_user, is_latest) {
+                                            (true, true) => "taunt-message user-taunt latest-taunt",
+                                            (true, false) => "taunt-message user-taunt",
+                                            (false, true) => "taunt-message latest-taunt",
+                                            (false, false) => "taunt-message",
                                         };
 
                                         // Format timestamp for hover text (WASM only)
@@ -807,7 +811,7 @@ fn app() -> Html {
                 <div class="footer-content">
                     <span class="copyright">{"© 2025 Michael A. Wright"}</span>
                     <span class="separator">{" | "}</span>
-                    <a href="https://github.com/softwarewrighter/game-mcp-poc/blob/main/LICENSE" target="_blank" class="license-link">{"License"}</a>
+                    <a href="https://github.com/sw-game-dev/game-mcp-poc/blob/main/LICENSE" target="_blank" class="license-link">{"License"}</a>
                     <span class="separator">{" | "}</span>
                     <span class="build-details">
                         {format!("Build: {} @ {} on {}",
