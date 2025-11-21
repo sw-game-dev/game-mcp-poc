@@ -9,3 +9,7 @@ license.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
+
+[build-dependencies]
+chrono = "0.4"
+hostname = "0.4"

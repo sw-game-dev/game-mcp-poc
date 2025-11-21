@@ -20,7 +20,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let port: u16 = env::var("PORT")
         .ok()
         .and_then(|s| s.parse().ok())
-        .unwrap_or(3000);
+        .unwrap_or(7397);
 
     // Start the server
     api::server::start_server(&db_path, port).await?;
